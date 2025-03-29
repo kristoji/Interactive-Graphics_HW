@@ -1,3 +1,14 @@
+function get_value(img, x, y, channel)
+{
+    return img.data[(y * img.width + x) * 4 + channel];
+}
+
+function set_value(img, x, y, channel, value)
+{
+    img.data[(y * img.width + x) * 4 + channel] = value;
+}
+
+
 // bgImg is the background image to be modified.
 // fgImg is the foreground image.
 // fgOpac is the opacity of the foreground image.
@@ -5,32 +16,32 @@
 function composite( bgImg, fgImg, fgOpac, fgPos )
 {    
     
-    for (var i = 0; i < fgImg.width; i++)
+    for (var j = 0; j < fgImg.height; j++)
     {
-        for (var j = 0; j < fgImg.height; j++)
+        for (var i = 0; i < fgImg.width; i++)
         {
             if ( fgPos.x + i < 0 || fgPos.x + i >= bgImg.width || fgPos.y + j < 0 || fgPos.y + j >= bgImg.height )
             {
                 continue;
             }
 
-            var fgAlpha = fgImg.data[(j * fgImg.width + i)*4 + 3] / 255.0;
-            var bgAlpha = bgImg.data[((fgPos.y + j) * bgImg.width + (fgPos.x + i))*4 + 3] / 255.0;
+            var fgAlpha = get_value(fgImg, i, j, 3) / 255.0;
+            var bgAlpha = get_value(bgImg, fgPos.x + i, fgPos.y + j, 3) / 255.0;
             
             fgAlpha = fgOpac * fgAlpha;
             var alpha = fgAlpha + (1 - fgAlpha) * bgAlpha;
 
             for (var k = 0; k < 3; k++)
             {
-                var fgPixel = fgImg.data[(j * fgImg.width + i)*4 + k];
-                var bgPixel = bgImg.data[((fgPos.y + j) * bgImg.width + (fgPos.x + i))*4 + k];
+                var fgPixel = get_value(fgImg, i, j, k);
+                var bgPixel = get_value(bgImg, fgPos.x + i, fgPos.y + j, k);
                 
                 var newPixel = fgAlpha * fgPixel + (1 - fgAlpha) * bgAlpha * bgPixel;
 
-                bgImg.data[((fgPos.y + j) * bgImg.width + (fgPos.x + i))*4 + k] = newPixel / alpha;
+                set_value(bgImg, fgPos.x + i, fgPos.y + j, k, newPixel / alpha);
             }
 
-            bgImg.data[((fgPos.y + j) * bgImg.width + (fgPos.x + i))*4 + 3] = alpha * 255;            
+            set_value(bgImg, fgPos.x + i, fgPos.y + j, 3, alpha * 255.0);      
         }
     }
 }
