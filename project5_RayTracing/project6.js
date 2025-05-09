@@ -60,10 +60,10 @@ vec3 Shade( Material mtl, vec3 position, vec3 normal, vec3 view )
 
 		vec3 w = normalize( lights[i].position - position );	// light Direction
 		vec3 h = normalize( view + w);
-		float cos_phi = dot( normal, h);
-		float cos_theta = dot( normal, w);
-		vec3 f_r = mtl.k_d + mtl.k_s * (pow( cos_phi, mtl.n ) / cos_theta);
-		color += lights[i].intensity*cos_theta*f_r; 
+		float cos_phi = max(0.0, dot( normal, h));
+		float cos_theta = max(0.0, dot( normal, w));
+		vec3 f_r_cos_theta = cos_theta*mtl.k_d + mtl.k_s * pow( cos_phi, mtl.n );
+		color += lights[i].intensity*f_r_cos_theta; 
 	}
 	return color;
 }
