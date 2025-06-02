@@ -1,0 +1,86 @@
+<!doctype html><html><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script><head><meta charset="utf-8"><title>Rocket Game!</title><style>body {
+            margin: 0;
+        }</style><script defer="defer" src="291.a086452d.js"></script><script defer="defer" src="main.a086452d.js"></script></head><body><div style="position:absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: black; display: flex; align-items: center" id="loadingCover"><div id="spinner" style="margin: auto;"><div class="preloader-wrapper big active center" style="width: 30vw; height: 30vw;"><div class="spinner-layer" style="border-color: white"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></div><div style="display: flex;" class="overlay" id="rocketPicture"><img src="static/images/rocket.svg" style="width: 20vw; height: 20vw; margin: auto;"></div><div style="position:absolute; bottom: 10px; color: white; text-align: center; font-size: 3vw; align-items: end; justify-content: center" class="overlay" id="loadingTextContainer"><b id="loadingProgress">Lighting the engines...</b></div><div style="position:absolute; bottom: 10px; right: 10px; color: white; flex-direction: column; gap: 20px;" id="levelStartPanel" class="hidden"><a class="btn-floating btn-large waves-effect waves-light red" id="startGame"><i class="material-icons">start</i></a> <a class="btn-floating btn-large waves-effect waves-light blue modal-trigger" href="#modal1"><i class="material-icons">help</i></a></div><div id="joystick-zone" style="position: absolute; width: 100%; height: 100%;"></div><div id="headsUpDisplay" style="flex-direction: column; position:absolute; bottom: 10px; left: 10px;" class="hidden"><div style="position: relative; width: fit-content; display: flex; align-items: center; margin-left: 2vw; margin-bottom: 2vh;"><div style="background-color: black;
+        border: 2px solid blue;
+        border-radius: 8px;
+        padding: 2px 8px;
+        font-weight: bold;
+        color: white;
+        line-height: 1;
+        width: 7vw;
+        text-align: right;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        z-index: 1;"><span id="crystalCount" class="ui-element">0</span></div><img src="static/ui/crystal_icon.png" style="position: absolute;
+        left: -2vw;
+        width: 4vw;
+        z-index: 2;"></div></div><div class="overlay hidden" id="endOfLevel" style="background-color: rgba(1,1,1,0.2);border-radius: 12px;width: 1000px; height: 500px; position: absolute; top: 50%; left: 50%; 
+        transform: translate(-50%, -50%);flex-direction: column; align-items: center; justify-content: center;"><b class="ui-element" id="levelDescriptor" style="font-weight: bold;">ROCKET DESTROYED</b><div style="display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 5px;
+        /* background-color: black; */
+        /* border: 2px solid blue; */
+        border-radius: 12px;
+        padding: 8px 12px;
+        gap: 10px;"><img src="static/ui/crystal_icon.png" style="width: 5vw"> <span class="ui-element" id="crystalCountLevelEnd" style="font-weight: bold; color: white; font-family: cursive;">0</span></div><a class="waves-effect waves-light btn red hidden" id="startOver">START AGAIN</a></div><div id="modal1" class="modal blue-grey darken-1 white-text center" style="position:absolute; border-radius: 20px"><div class="modal-content"><img src="static/images/rocket.svg" style="width: 20vw; height: 20vw; margin: auto;"><h4>WELCOME CAPTAIN!</h4><p>You have been chosen to visit the nearest planet to our spaceship to pick up more energy crystals for our ship.</p><p>Your rocket has primative engines, but we'll upgrade it every time you come back to the ship. Later expeditions will become progressively longer.</p><p>Along your journey, be sure to look out for the following things:</p><ul><li><b>Energy Crystals</b>: This is what you're here for! Try to get as many as you can in the time you have.</li><li><b>Rocks</b>: Be careful of these! If your ship hits a rock it will destroy</li><li><b>Shield</b>: The shield can save you from hitting a rock, but it does not last forever...</li></ul><p>Enjoy the journey!</p><p><i>Made in ThreeJS and TypeScript</i></p><p><i>Models used:</i></p><p><a href="https://skfb.ly/OBJJ">"Rocket"</a> by Constantine Tvalashvili is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p><p><a href="https://skfb.ly/6WMGE">"Cliffs"</a> by DJMaesen is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p><p><a href="https://skfb.ly/opO6S">"Shield Item"</a> by Reikan is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p><p><a href="https://skfb.ly/6RSu8">"Glowing Rock"</a> by JAY2.0 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p><p><a href="https://skfb.ly/6TJ9A">"Glowing crystals"</a> by SusanKing is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p><p><a href="https://skfb.ly/6UAUW">"SpaceShip "NORTEND""</a> by Ruslan Malovsky is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</p></div></div><script>document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems, {});
+        console.log(instances);
+    });</script></body><style>.ui-element {
+        font-size: 3vw;
+        font-style: italic;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        align-items: center
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .danger{
+        color: red;
+    }
+
+
+    @keyframes fadein {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeout {
+        100% {
+            opacity: 1;
+        }
+        0% {
+            opacity: 0;
+        }
+    }
+
+    .fadeIn {
+        opacity: 1;
+        animation: fadein 1s linear;
+        background-color: black;
+    }
+
+    .fadeOut {
+        opacity: 1;
+        animation: fadeout 1s linear;
+        background-color: black;
+    }</style></html>
