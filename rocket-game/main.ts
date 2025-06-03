@@ -6,6 +6,7 @@ import { animateCameraFromEndToStartPosition, crystalUiElement, startPanel, uiIn
 import { onKeyDown, onKeyUp, clamp, sensibility } from './game/control';
 import { destructionBits, destructionShield, detectCollisions, updateDestructionBits } from './game/collision';
 import { Water } from './env_obj/water';
+import { garbageCollector } from './game/garbageCollector';
 
 export const scene = new Scene();
 export const camera = new PerspectiveCamera(
@@ -262,6 +263,7 @@ const animate = () => {
             sceneConfiguration.speed = clamp(sceneConfiguration.speed, 0, 10);
             sceneConfiguration.courseProgress += sceneConfiguration.speed;
             detectCollisions();
+            garbageCollector();
         }
 
         objectsMotionUpdate();
