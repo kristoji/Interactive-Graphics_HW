@@ -1,8 +1,8 @@
-import { AnimationClip, AnimationMixer, Box3, BoxGeometry, Clock, InterpolateSmooth, LoopOnce, Material, Mesh, MeshBasicMaterial, Object3D, Quaternion, QuaternionKeyframeTrack, SphereGeometry, Vector3, VectorKeyframeTrack } from "three";
+import { AnimationClip, AnimationMixer, Box3, BoxGeometry, Clock, InterpolateLinear, InterpolateSmooth, LoopOnce, Material, Mesh, MeshBasicMaterial, Object3D, Quaternion, QuaternionKeyframeTrack, SphereGeometry, Vector3, VectorKeyframeTrack } from "three";
 import { camera, scene, sceneConfiguration } from "../main";
 import { challengeRows, ObjectType, rocketModel, shieldModel, shieldModel_transparent } from "./objects";
 import { radToDeg } from "three/src/math/MathUtils";
-import { crystalUiElement, showLevelEndScreen } from "./ui";
+import { crystalUiElement, showLevelEndScreen, startLevelAnimation } from "./ui";
 
 export const destructionBits = new Array<Mesh>();
 export let destructionShield: Object3D | null = null;
@@ -117,6 +117,8 @@ const playDestructionAnimationShield = (position : any) => {
 const playDestructionAnimationRock = (position : any) => {
 
     if (destructionShield) {
+        shakeCameraBackInPos();
+        // startLevelAnimation();
         scene.remove(destructionShield);
         destructionShield = null;
     }
@@ -132,9 +134,10 @@ const playDestructionAnimationRock = (position : any) => {
     }
 }
 
-export const shakeCamera = (intensity = 5, duration = 200) => {
+const shakeCameraBackInPos = (intensity = 5, duration = 200) => {
     const startTime = performance.now();
     const originalPosition = camera.position.clone();
+    const originalQuaternion = camera.quaternion.clone();
 
     const animate = () => {
         const elapsed = performance.now() - startTime;
@@ -145,9 +148,39 @@ export const shakeCamera = (intensity = 5, duration = 200) => {
             camera.position.y = originalPosition.y + (Math.random() - 0.5) * intensity;
             camera.position.z = originalPosition.z + (Math.random() - 0.5) * intensity;
 
-            camera.rotation.x += Math.random()/100;
-            camera.rotation.y += Math.random()/100;
-            camera.rotation.z += Math.random()/100;
+            camera.rotation.x += (Math.random() - 0.5)/100;
+            camera.rotation.y += (Math.random() - 0.5)/100;
+            camera.rotation.z += (Math.random() - 0.5)/100;
+            
+
+            requestAnimationFrame(animate);
+        }
+    };
+
+    animate();
+    
+}
+
+export const shakeCamera = (intensity = 5, duration = 200) => {
+
+    const dieLeftSign = sceneConfiguration.dieLeft ? 1 : -1;
+
+    const startTime = performance.now();
+    const originalPosition = camera.position.clone();
+    const originalQuaternion = camera.quaternion.clone();
+
+    const animate = () => {
+        const elapsed = performance.now() - startTime;
+
+        if (elapsed < duration) {
+            // Apply small random offsets to the camera position
+            camera.position.x = originalPosition.x + (Math.random() - 0.5) * intensity;
+            camera.position.y = originalPosition.y + (Math.random() - 0.5) * intensity;
+            camera.position.z = originalPosition.z + (Math.random() - 0.5) * intensity;
+
+            camera.rotation.x +=  Math.random()/100;
+            camera.rotation.y +=  Math.random()/100;
+            camera.rotation.z += dieLeftSign * Math.random()/100;
             
 
             requestAnimationFrame(animate);
@@ -162,7 +195,6 @@ export const shakeCamera = (intensity = 5, duration = 200) => {
     const times = [0, 0.7, 1.4];
 
     // Position: start → overshoot → settle
-    const dieLeftSign = sceneConfiguration.dieLeft ? 1 : -1;
     const positionValues = [
         camera.position.x, camera.position.y, camera.position.z,    // Start
         30*dieLeftSign, 35, 110,                                                  // Overshoot
@@ -176,10 +208,6 @@ export const shakeCamera = (intensity = 5, duration = 200) => {
     animationAction.clampWhenFinished = true;
 
     camera.userData.clock = new Clock();
-    camera.userData.mixer.addEventListener('finished', () => {
-        // camera.lookAt(rocketModel.position);
-        // camera.lookAt(new Vector3(0, -500, -1400));
-    });
 
     animationAction.play();
 };
