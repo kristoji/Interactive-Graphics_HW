@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { BasicCharacterController } from './objects/SpaceShips';
 import { ThirdPersonCamera } from './components/Camera';
-import { scene } from './scenes/MainScene';
+import { BasicInput, PlayerInput } from './components/Controller';
+import { NPCController } from './objects/Npc';
 
 
 export class Demo {
@@ -12,6 +13,7 @@ export class Demo {
   private _camera: THREE.PerspectiveCamera;
   private _controls: BasicCharacterController;
   private _thirdPersonCamera: ThirdPersonCamera;
+  private _NPC: NPCController;
 
   constructor() {
     this._threejs = new THREE.WebGLRenderer({
@@ -89,18 +91,26 @@ export class Demo {
     this._controls = new BasicCharacterController({
       modelName: 'Bob',
       color: 'Purple',
+      position: new THREE.Vector3(0, 5, 0),
       scene: this._scene,
     });
+
+    this._NPC = new NPCController({
+      modelName: 'Pancake',
+      color: 'Red',
+      position: new THREE.Vector3(0, 5, -10),
+      scene: this._scene,
+    })
 
     this._thirdPersonCamera = new ThirdPersonCamera({
       camera: this._camera,
       target: this._controls,
     });
 
-    const gridHelper = new THREE.GridHelper(100, 10, 0x0000ff, 0x808080);
-    scene.add(gridHelper);
+    const gridHelper = new THREE.GridHelper(100, 10);
+    this._scene.add(gridHelper);
     const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    this._scene.add(axesHelper);
 
 
 

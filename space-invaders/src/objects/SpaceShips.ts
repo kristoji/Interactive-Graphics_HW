@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { BasicCharacterControllerInput } from '../components/Controller';
+import { BasicInput, PlayerInput } from '../components/Controller';
 import { MTLLoader, OBJLoader } from 'three/examples/jsm/Addons.js';
 
 
@@ -9,12 +9,12 @@ export class BasicCharacterController {
   private _acceleration: THREE.Vector3;
   private _velocity: THREE.Vector3;
   private _position: THREE.Vector3;
-  private _input: BasicCharacterControllerInput;
+  private _input: BasicInput;
   private _target: THREE.Object3D | null = null;
   private _angularAccelerationY: number;
   private _angularDecelerationY: number;
 
-  constructor(params: {modelName: string, color: string, scene: THREE.Scene}) {
+  constructor(params: {modelName: string, color: string, position: THREE.Vector3, scene: THREE.Scene}) {
     this._scene = params.scene;
     // this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
     // this._acceleration = new THREE.Vector3(1, 0.25, 50.0);
@@ -24,8 +24,8 @@ export class BasicCharacterController {
     this._angularDecelerationY = -0.0001;
     
     this._velocity = new THREE.Vector3(0, 0, 0);
-    this._position = new THREE.Vector3();
-    this._input = new BasicCharacterControllerInput();
+    this._position = params.position.clone();
+    this._input = new PlayerInput();
 
     this._LoadModels(params.modelName, params.color);
   }
@@ -62,7 +62,7 @@ export class BasicCharacterController {
             
             this._scene.add(this._target);
             object.rotation.y = Math.PI;
-            object.position.set(0, 30,0);
+            object.position.copy(this._position);
         });
     });
   }
@@ -97,6 +97,8 @@ export class BasicCharacterController {
     frameDecceleration.multiplyScalar(timeInSeconds);
     frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
         Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+    frameDecceleration.y = Math.sign(frameDecceleration.y) * Math.min(
+        Math.abs(frameDecceleration.y), Math.abs(velocity.y));
 
     velocity.add(frameDecceleration);
 

@@ -1,6 +1,6 @@
-export class BasicCharacterControllerInput {
+export class BasicInput {
   public keys: { forward: boolean; backward: boolean; left: boolean; right: boolean; space: boolean; shift: boolean; };
-  
+
   constructor() {
     this.keys = {
       forward: false,
@@ -10,6 +10,14 @@ export class BasicCharacterControllerInput {
       space: false,
       shift: false,
     };
+  }
+}
+
+
+export class PlayerInput extends BasicInput{
+  
+  constructor() {
+    super();
 
     document.addEventListener('keydown', (e) => this._onKeyDown(e), false);
     document.addEventListener('keyup', (e) => this._onKeyUp(e), false);
