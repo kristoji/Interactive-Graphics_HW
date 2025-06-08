@@ -17,7 +17,7 @@ export class PlayerController extends Component {
   }
 
   InitComponent() {
-    // this.RegisterHandler_('physics.collision', (m) => { this.OnCollision_(m); });
+    this.RegisterHandler_('physics.collision', () => { this.OnCollision_(); });
   }
 
   InitEntity() {
@@ -26,19 +26,19 @@ export class PlayerController extends Component {
     this.velocity_ = new THREE.Vector3(0, 0, 0);
   }
 
-  // OnCollision_() {
-  //   if (!this.dead_) {
-  //     this.dead_ = true;
-  //     console.log('EXPLODE ' + this.Parent!.Name);
-  //     this.Broadcast({topic: 'health.dead'});
-  //   }
-  // }
+  OnCollision_() {
+    if (!this.dead_) {
+      this.dead_ = true;
+      console.log('EXPLODE ' + this.Parent!.Name);
+      this.Broadcast({topic: 'health.dead'});
+    }
+  }
 
-  // Fire_() {
-  //   this.Broadcast({
-  //       topic: 'player.fire'
-  //   });
-  // }
+  Fire_() {
+    this.Broadcast({
+        topic: 'player.fire'
+    });
+  }
 
   Update(timeInSeconds: number) {
     if (this.dead_) {
@@ -113,8 +113,8 @@ export class PlayerController extends Component {
     this.Parent!.SetPosition(pos);
     this.Parent!.SetQuaternion(_R);
 
-    // if (input.space) {
-    //   this.Fire_();
-    // }
+    if (input.space) {
+      this.Fire_();
+    }
   }
 };

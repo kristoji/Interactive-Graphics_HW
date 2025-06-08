@@ -8,6 +8,8 @@ import { RenderComponent } from './render-component.ts';
 import { ThirdPersonCamera } from '../player/third-person-camera.ts';
 import { TieFighterController } from '../entities/tie-fighter-controller.ts';
 import { XWingController } from '../entities/xwing-controller.ts';
+import { BasicRigidBody } from '../physics/basic-rigid-body.ts';
+import { XWingEffects } from '../effects/xwing-effects.ts';
 
 
 export class PlayerSpawner extends Component {
@@ -53,14 +55,13 @@ export class PlayerSpawner extends Component {
       },
     }));
     player.AddComponent(new XWingController(params));
-    // player.AddComponent(new TieFighterController(params));
-    // player.AddComponent(new xwing_effect.XWingEffects(params));
+    player.AddComponent(new XWingEffects(params));
     player.AddComponent(new PlayerInput());
     // player.AddComponent(new player_ps4_input.PlayerPS4Input());
     player.AddComponent(new PlayerController());
-    // player.AddComponent(new basic_rigid_body.BasicRigidBody({
-    //   box: new THREE.Vector3(18, 6, 8),
-    // }));
+    player.AddComponent(new BasicRigidBody({
+      box: new THREE.Vector3(18, 6, 8),
+    }));
     // player.AddComponent(new health_controller.HealthController({
     //   maxHealth: 50,
     //   shields: 50,
@@ -120,9 +121,9 @@ export class TieFighterSpawner extends Component {
       colour: new THREE.Color(0xFFFFFF),
     }));
     e.AddComponent(new TieFighterController(params));
-    // e.AddComponent(new basic_rigid_body.BasicRigidBody({
-    //   box: new THREE.Vector3(15, 15, 15)
-    // }));
+    e.AddComponent(new BasicRigidBody({
+      box: new THREE.Vector3(15, 15, 15)
+    }));
     // e.AddComponent(new health_controller.HealthController({
     //   maxHealth: 50,
     // }));
@@ -177,11 +178,11 @@ export class XWingSpawner extends Component {
         quaternion: new THREE.Quaternion(),
       },
     }));
-    // e.AddComponent(new xwing_effect.XWingEffects(params));
+    e.AddComponent(new XWingEffects(params));
     e.AddComponent(new XWingController(params));
-    // e.AddComponent(new basic_rigid_body.BasicRigidBody({
-    //   box: new THREE.Vector3(15, 15, 15)
-    // }));
+    e.AddComponent(new BasicRigidBody({
+      box: new THREE.Vector3(15, 15, 15)
+    }));
     // e.AddComponent(new health_controller.HealthController({
     //   maxHealth: 50,
     //   shields: 50,

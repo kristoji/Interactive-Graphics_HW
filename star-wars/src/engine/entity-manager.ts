@@ -1,4 +1,4 @@
-import { Entity } from '../entities/entity.ts';
+import { Entity } from './entity.ts';
 
 export class EntityManager {
     numUpdates_: number = 0;

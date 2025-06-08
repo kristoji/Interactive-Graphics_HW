@@ -11,6 +11,7 @@ type t_Attributes = {
     InputCurrent?: Input,
     InputPrevious?: Input,
     team?: string,
+    roughRadius?: number,
 }
 
 export class Entity {

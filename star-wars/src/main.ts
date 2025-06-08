@@ -10,6 +10,8 @@ import { PlayerSpawner, TieFighterSpawner, XWingSpawner } from './engine/spawner
 import { TieFighterController } from './entities/tie-fighter-controller.ts';
 
 import * as MATH from './utils/math.js';
+import { AmmoJSController } from './physics/ammojs-component.ts';
+import { BlasterSystem } from './effects/blaster.ts';
 
 class StarWarsGame {
   firstStep_: number = 0;
@@ -18,6 +20,7 @@ class StarWarsGame {
   threejs_: ThreeJSController;
   camera_: THREE.PerspectiveCamera;
   scene_: THREE.Scene;
+  ammojs_: AmmoJSController;
 
   constructor() {
     this._Initialize();
@@ -38,10 +41,24 @@ class StarWarsGame {
     threejs.AddComponent(new ThreeJSController());
     this.entityManager_.Add(threejs, 'threejs');
 
+    
+    const ammojs = new Entity();
+    ammojs.AddComponent(new AmmoJSController());
+    this.entityManager_.Add(ammojs, 'physics');
+
     // Hack
+    this.ammojs_ = ammojs.GetComponent('AmmoJSController') as AmmoJSController;
     this.threejs_ = threejs.GetComponent('ThreeJSController') as ThreeJSController;
     this.scene_ = this.threejs_.scene_;
     this.camera_ = this.threejs_.camera_;
+
+    const fx = new Entity();
+    fx.AddComponent(new BlasterSystem({
+        scene: this.scene_,
+        camera: this.camera_,
+        texture: './resources/textures/fx/blaster.jpg',
+    }));
+    this.entityManager_.Add(fx, 'fx');
 
     const l = new Entity();
     l.AddComponent(new LoadController());
@@ -112,15 +129,20 @@ class StarWarsGame {
 
     this.entityManager_.Update(timeElapsedS, 0);
     this.entityManager_.Update(timeElapsedS, 1);
+    
+    this.ammojs_.StepSimulation(timeElapsedS);
   }
 }
 
-
-
+declare let Ammo: any;
 window.addEventListener('DOMContentLoaded', () => {
   const _Setup = () => {
-    new StarWarsGame();
-    document.body.removeEventListener('click', _Setup);
+    Ammo().then(function (AmmoLib) {
+      Ammo = AmmoLib;
+      console.log('Ammo.js loaded');
+      new StarWarsGame();
+      document.body.removeEventListener('click', _Setup);
+    });
   };
   document.body.addEventListener('click', _Setup);
 });
