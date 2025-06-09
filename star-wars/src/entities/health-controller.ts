@@ -76,7 +76,6 @@ export class HealthController extends Component {
     }
 
     if (dmg <= 0) {
-      // this.Broadcast({topic: 'health.shielded'});
       return;
     }
 
@@ -85,7 +84,7 @@ export class HealthController extends Component {
     const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
     explosion.Spawn(pos);    
 
-    this.Broadcast({topic: 'health.damage'});
+    // this.Broadcast({topic: 'health.damage'});
 
     if (this.Parent!.Attributes!.health! <= 0) {
       this.Die_();

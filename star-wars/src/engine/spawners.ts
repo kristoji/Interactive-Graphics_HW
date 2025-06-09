@@ -16,6 +16,7 @@ import { SpatialHashGrid } from './spatial-hash-grid.ts';
 import { ExplodeEffect, TinyExplodeEffect } from '../effects/explode-component.ts';
 import { Vector3 } from 'three';
 import { HealthController } from '../entities/health-controller.ts';
+import { ShieldsController } from '../entities/shields-controller.ts';
 
 
 export class PlayerSpawner extends Component {
@@ -73,8 +74,8 @@ export class PlayerSpawner extends Component {
       new ThirdPersonCamera({
           camera: this.params_.camera,
           target: player}));
-    // player.AddComponent(
-    //     new shields_controller.ShieldsController(params));
+    player.AddComponent(
+        new ShieldsController());
     // player.AddComponent(
     //     new shields_ui_controller.ShieldsUIController(params));
     // player.AddComponent(
@@ -190,8 +191,7 @@ export class XWingSpawner extends Component {
     // {
     //   grid: this.params_.grid,
     // }));
-    // e.AddComponent(
-    //     new shields_controller.ShieldsController(params));
+    e.AddComponent(new ShieldsController());
 
     this.Manager!.Add(e);
 
