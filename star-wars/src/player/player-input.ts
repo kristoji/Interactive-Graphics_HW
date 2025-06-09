@@ -1,17 +1,7 @@
 import {Component} from "../engine/entity.ts";
 
+import type {Input} from '../utils/types.ts';
 
-export type Input = {
-  axis1Forward: number;
-  axis1Side: number;
-  axis2Forward: number;
-  axis2Side: number;
-  pageUp: boolean;
-  pageDown: boolean;
-  space: boolean;
-  shift: boolean;
-  backspace: boolean;
-}
 
 export class PlayerInput extends Component {
   constructor() {

@@ -14,7 +14,7 @@ void main() {
 }
 `;
 
-const _PS = `
+const _FS = `
 uniform sampler2D diffuse;
 
 in vec2 v_UV;
@@ -55,7 +55,7 @@ export class BlasterSystem extends Component {
     this.material_ = new THREE.ShaderMaterial( {
       uniforms: uniforms,
       vertexShader: _VS,
-      fragmentShader: _PS,
+      fragmentShader: _FS,
 
       blending: THREE.AdditiveBlending,
       depthTest: true,

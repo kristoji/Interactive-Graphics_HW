@@ -2,6 +2,40 @@ import { Entity } from '../engine/entity.ts';
 import {THREE} from './three-defs.ts';
 
 
+export type Hit = {
+  dmg: number;
+  pos: THREE.Vector3;
+}
+
+export type Input = {
+  axis1Forward: number;
+  axis1Side: number;
+  axis2Forward: number;
+  axis2Side: number;
+  pageUp: boolean;
+  pageDown: boolean;
+  space: boolean;
+  shift: boolean;
+  backspace: boolean;
+}
+
+export type Message<T> = {
+    topic: string;
+    value?: T;
+}
+
+export type t_Attributes = {
+    InputCurrent?: Input,
+    InputPrevious?: Input,
+    team?: string,
+    roughRadius?: number,
+    health?: number,
+    maxHealth?: number,
+    shields?: number,
+    maxShields?: number,
+    dead?: boolean
+}
+
 export type LerpFunction<T> = (t: number, a: T, b: T) => T;
 
 export type Particle = {

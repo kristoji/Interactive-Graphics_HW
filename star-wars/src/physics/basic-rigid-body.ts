@@ -12,7 +12,9 @@ export class BasicRigidBody extends Component {
   body_: AmmoJSRigidBody | null = null;
   debug_: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
 
-  constructor(params) {
+  constructor(params: {
+                        box: THREE.Vector3;
+                      }) {
     super();
     this.params_ = params;
   }

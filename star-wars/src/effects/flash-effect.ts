@@ -2,9 +2,6 @@ import {THREE} from '../utils/three-defs.ts';
 
 import {ParticleEmitter, ParticleSystem} from "./particle-system.js";
 import type {Particle} from '../utils/types.ts';
-import {Component, Entity} from "../engine/entity.ts";
-import {rand_range} from "../utils/math.ts";
-import {RenderComponent} from "../engine/render-component.ts";
 
 
 export class ShootFlashFXEmitter extends ParticleEmitter {

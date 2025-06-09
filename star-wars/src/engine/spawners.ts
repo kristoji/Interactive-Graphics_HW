@@ -13,18 +13,19 @@ import { XWingEffects } from '../effects/xwing-effects.ts';
 import { EnemyAIController } from '../entities/enemy-ai-controller.ts';
 import { SpatialGridController } from './spatial-grid-controller.ts';
 import { SpatialHashGrid } from './spatial-hash-grid.ts';
+import { ExplodeEffect, TinyExplodeEffect } from '../effects/explode-component.ts';
+import { Vector3 } from 'three';
+import { HealthController } from '../entities/health-controller.ts';
 
 
 export class PlayerSpawner extends Component {
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
-    manager: EntityManager;
   }
   constructor(params: {
                         camera: THREE.Camera;
                         scene: THREE.Scene;
-                        manager: EntityManager;
                       }) {
     super();
     this.params_ = params;
@@ -40,7 +41,8 @@ export class PlayerSpawner extends Component {
 
     const player = new Entity();
     player.Attributes!.team = 'allies';
-    player.SetPosition(new THREE.Vector3(0, 600, -300));
+    player.SetPosition(new THREE.Vector3(0, 600, -800));
+    player.SetQuaternion(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI))
     // player.AddComponent(
     //   new spatial_grid_controller.SpatialGridController(
     //       {grid: this.params_.grid}));
@@ -62,10 +64,10 @@ export class PlayerSpawner extends Component {
     player.AddComponent(new BasicRigidBody({
       box: new THREE.Vector3(18, 6, 8),
     }));
-    // player.AddComponent(new health_controller.HealthController({
-    //   maxHealth: 50,
-    //   shields: 50,
-    // }));
+    player.AddComponent(new HealthController({
+      maxHealth: 50,
+      shields: 50,
+    }));
     // player.AddComponent(new crosshair.Crosshair());
     player.AddComponent(
       new ThirdPersonCamera({
@@ -78,7 +80,9 @@ export class PlayerSpawner extends Component {
     // player.AddComponent(
     //     new atmosphere_effect.AtmosphereEffect(params));
 
-    this.params_.manager.Add(player, 'player');
+    // this.params_.manager.Add(player, 'player');
+    this.Manager!.Add(player, 'player');
+
 
     return player;
   }
@@ -89,14 +93,12 @@ export class TieFighterSpawner extends Component {
     camera: THREE.Camera;
     scene: THREE.Scene;
     grid: SpatialHashGrid;
-    manager: EntityManager;
   };
 
   constructor(params : {
                           camera: THREE.Camera;
                           scene: THREE.Scene;
                           grid: SpatialHashGrid;
-                          manager: EntityManager;
                         }) {
     super();
     this.params_ = params;
@@ -122,9 +124,9 @@ export class TieFighterSpawner extends Component {
     e.AddComponent(new BasicRigidBody({
       box: new THREE.Vector3(15, 15, 15)
     }));
-    // e.AddComponent(new health_controller.HealthController({
-    //   maxHealth: 50,
-    // }));
+    e.AddComponent(new HealthController({
+      maxHealth: 50,
+    }));
     // // DEMO
     // e.AddComponent(new floating_descriptor.FloatingDescriptor());
     e.AddComponent(new EnemyAIController())
@@ -133,7 +135,7 @@ export class TieFighterSpawner extends Component {
     //   grid: this.params_.grid,
     // }));
 
-    this.params_.manager.Add(e);
+    this.Manager!.Add(e);
 
     return e;
   }
@@ -144,13 +146,11 @@ export class XWingSpawner extends Component {
     camera: THREE.Camera;
     scene: THREE.Scene;
     grid: SpatialHashGrid;
-    manager: EntityManager;
   };
   constructor(params : {
                           camera: THREE.Camera;
                           scene: THREE.Scene;
                           grid: SpatialHashGrid;
-                          manager: EntityManager;
                         }) {  
     super();
     this.params_ = params;
@@ -181,10 +181,10 @@ export class XWingSpawner extends Component {
     e.AddComponent(new BasicRigidBody({
       box: new THREE.Vector3(15, 15, 15)
     }));
-    // e.AddComponent(new health_controller.HealthController({
-    //   maxHealth: 50,
-    //   shields: 50,
-    // }));
+    e.AddComponent(new HealthController({
+      maxHealth: 50,
+      shields: 50,
+    }));
     // // e.AddComponent(new floating_descriptor.FloatingDescriptor());
     e.AddComponent(new EnemyAIController())
     // {
@@ -193,7 +193,101 @@ export class XWingSpawner extends Component {
     // e.AddComponent(
     //     new shields_controller.ShieldsController(params));
 
-    this.params_.manager.Add(e);
+    this.Manager!.Add(e);
+
+    return e;
+  }
+};
+
+
+// export class ShipSmokeSpawner extends Component {
+//   params_ : {
+//     camera: THREE.Camera,
+//     scene: THREE.Scene,
+//   }
+
+//   constructor(params: {
+//                         camera: THREE.Camera,
+//                         scene: THREE.Scene,
+//                       }
+//                       ) {
+//     super();
+//     this.params_ = params;
+//   }
+
+//   Spawn(target: Entity) {
+//     const params = {
+//       camera: this.params_.camera,
+//       scene: this.params_.scene,
+//       target: target,
+//     };
+
+//     const e = new Entity();
+//     e.SetPosition(target.Position);
+//     e.AddComponent(new ShipEffects(params));
+
+//     this.Manager.Add(e);
+
+//     return e;
+//   }
+// };
+
+export class ExplosionSpawner extends Component {
+  params_ : {
+    camera: THREE.Camera,
+    scene: THREE.Scene,
+  }
+
+  constructor(params: {
+                        camera: THREE.Camera,
+                        scene: THREE.Scene,
+                      }) {
+    super();
+    this.params_ = params;
+  }
+
+  Spawn(pos: THREE.Vector3) {
+    const params = {
+      camera: this.params_.camera,
+      scene: this.params_.scene,
+    };
+
+    const e = new Entity();
+    e.SetPosition(pos);
+    e.AddComponent(new ExplodeEffect(params));
+
+    this.Manager!.Add(e);
+
+    return e;
+  }
+};
+
+export class TinyExplosionSpawner extends Component {
+  params_ : {
+    camera: THREE.Camera,
+    scene: THREE.Scene,
+  }
+
+  constructor(params: {
+                        camera: THREE.Camera,
+                        scene: THREE.Scene,
+                      }) {
+    super();
+    this.params_ = params;
+  }
+
+  Spawn(pos: THREE.Vector3) {
+    const params = {
+      camera: this.params_.camera,
+      scene: this.params_.scene,
+    };
+
+    const e = new Entity();
+    e.SetPosition(pos);
+    e.AddComponent(new TinyExplodeEffect(params));
+
+
+    this.Manager!.Add(e);
 
     return e;
   }

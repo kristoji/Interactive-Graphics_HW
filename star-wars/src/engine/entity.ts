@@ -1,18 +1,8 @@
 import {THREE} from '../utils/three-defs.js';
 import { EntityManager } from '../engine/entity-manager.js'; // Adjust the path as needed
-import type { Input } from '../player/player-input.ts';
 
-type Message<T> = {
-    topic: string;
-    value?: T;
-}
+import type {Message, t_Attributes} from '../utils/types.ts';
 
-type t_Attributes = {
-    InputCurrent?: Input,
-    InputPrevious?: Input,
-    team?: string,
-    roughRadius?: number,
-}
 
 export class Entity {
     name_: null | string = null;
@@ -197,6 +187,10 @@ export class Component {
 
     SetPass(pass: number) {
         this.pass_ = pass;
+    }
+
+    get Manager() : EntityManager | null {
+      return this.parent_!.Manager;
     }
 
     get Parent(): Entity | null {

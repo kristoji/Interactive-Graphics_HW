@@ -1,5 +1,5 @@
 import {THREE} from '../utils/three-defs.ts';
-import {Bullet} from '../utils/types.ts';
+import {Bullet, Hit} from '../utils/types.ts';
 
 import {Component} from '../engine/entity.ts';
 import { RenderComponent } from '../engine/render-component.ts';
@@ -8,6 +8,7 @@ import { BlasterSystem } from '../effects/blaster.ts';
 import { LoadController } from '../engine/load-controller.ts';
 import { ShootFlashFXEmitter } from '../effects/flash-effect.ts';
 import { AmmoJSController } from '../physics/ammojs-component.ts';
+import { TinyExplosionSpawner } from '../engine/spawners.ts';
 
 
 export class XWingController extends Component {
@@ -160,9 +161,12 @@ export class XWingController extends Component {
           continue;
         }
         const e = this.FindEntity(h.name)!;
-        e.Broadcast({topic: 'player.hit', value: this.params_.blasterStrength});
+        e.Broadcast<Hit>({topic: 'player.hit', value: {
+                                                        dmg: this.params_.blasterStrength,
+                                                        pos: h.position}
+                                                      });
         s.Life = 0.0;
-        console.log('HIT ' + e.Name + ' with blaster shot from ' + this.Parent!.Name);
+        // console.log('HIT ' + e.Name + ' with blaster shot from ' + this.Parent!.Name);
 
         // const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
         // explosion.Spawn(h.position);    

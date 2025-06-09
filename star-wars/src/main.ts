@@ -6,7 +6,7 @@ import {LoadController} from './engine/load-controller.ts';
 import {ThreeJSController} from './engine/threejs-component.ts';
 
 import {THREE} from './utils/three-defs.js';
-import { PlayerSpawner, TieFighterSpawner, XWingSpawner } from './engine/spawners.ts';
+import { ExplosionSpawner, PlayerSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
 import { TieFighterController } from './entities/tie-fighter-controller.ts';
 
 import * as MATH from './utils/math.js';
@@ -35,7 +35,6 @@ class StarWarsGame {
         [[-5000, -5000], [5000, 5000]], [100, 100]);
 
     this.LoadControllers_();
-
 
     this.previousRAF_ = null;
     this.RAF_();
@@ -73,12 +72,13 @@ class StarWarsGame {
       grid: this.grid_,
       camera: this.camera_,
       scene: this.scene_,
-      manager: this.entityManager_,
     };
     const spawner = new Entity();
     spawner.AddComponent(new PlayerSpawner(basicParams));
     spawner.AddComponent(new TieFighterSpawner(basicParams));
     spawner.AddComponent(new XWingSpawner(basicParams));
+    spawner.AddComponent(new ExplosionSpawner(basicParams));
+    spawner.AddComponent(new TinyExplosionSpawner(basicParams));
     this.entityManager_.Add(spawner, 'spawners');
     
     (spawner.GetComponent('PlayerSpawner') as PlayerSpawner).Spawn();

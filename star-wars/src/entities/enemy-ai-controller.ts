@@ -53,7 +53,7 @@ export class EnemyAIController extends Component {
 
     // const originVelocity = this.ApplySeek_(
     //     this.FindEntity('star-destroyer'));
-    const originVelocity = this.ApplySeek_(this.FindEntity('player')!);
+    const originVelocity = this.ApplySeek_(this.target_);
 
     const wanderVelocity = this.ApplyWander_();
     const collisionVelocity = this.ApplyCollisionAvoidance_();
@@ -186,8 +186,8 @@ export class EnemyAIController extends Component {
     return pointAhead.multiplyScalar(_WANDER_FORCE);
   }
 
-  ApplySeek_(target: Entity) : THREE.Vector3 {
-    if (!target.Attributes!.roughRadius) {
+  ApplySeek_(target: Entity | null) : THREE.Vector3 {
+    if (!target || !target.Attributes!.roughRadius) {
       return new THREE.Vector3(0, 0, 0);
     }
     const dist = this.Parent!.Position.distanceTo(target.Position);
