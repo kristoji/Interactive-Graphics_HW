@@ -12,6 +12,7 @@ import { TieFighterController } from './entities/tie-fighter-controller.ts';
 import * as MATH from './utils/math.js';
 import { AmmoJSController } from './physics/ammojs-component.ts';
 import { BlasterSystem } from './effects/blaster.ts';
+import { SpatialHashGrid } from './engine/spatial-hash-grid.ts';
 
 class StarWarsGame {
   firstStep_: number = 0;
@@ -21,6 +22,7 @@ class StarWarsGame {
   camera_: THREE.PerspectiveCamera;
   scene_: THREE.Scene;
   ammojs_: AmmoJSController;
+  grid_: SpatialHashGrid;
 
   constructor() {
     this._Initialize();
@@ -28,6 +30,9 @@ class StarWarsGame {
 
   _Initialize() {
     this.entityManager_ = new EntityManager();
+
+    this.grid_ = new SpatialHashGrid(
+        [[-5000, -5000], [5000, 5000]], [100, 100]);
 
     this.LoadControllers_();
 
@@ -65,7 +70,7 @@ class StarWarsGame {
     this.entityManager_.Add(l, 'loader');
 
     const basicParams = {
-      // grid: this.grid_,
+      grid: this.grid_,
       camera: this.camera_,
       scene: this.scene_,
       manager: this.entityManager_,
@@ -79,7 +84,7 @@ class StarWarsGame {
     (spawner.GetComponent('PlayerSpawner') as PlayerSpawner).Spawn();
 
 
-    for (let i = 0; i < 35; ++i) {
+    for (let i = 0; i < 10; ++i) {
       const e = (spawner.GetComponent('TieFighterSpawner') as TieFighterSpawner).Spawn();
       const n = new THREE.Vector3(
         MATH.rand_range(-1, 1),
@@ -88,7 +93,7 @@ class StarWarsGame {
       );
       n.normalize();
       n.multiplyScalar(300);
-      // n.add(new THREE.Vector3(0, 0, 1000));
+      n.add(new THREE.Vector3(0, 0, 1000));
       e.SetPosition(n);
     }
     
@@ -101,7 +106,7 @@ class StarWarsGame {
       );
       n.normalize();
       n.multiplyScalar(300);
-      // n.add(new THREE.Vector3(0, 0, 800));
+      n.add(new THREE.Vector3(0, 0, 800));
       e.SetPosition(n);
     }
 

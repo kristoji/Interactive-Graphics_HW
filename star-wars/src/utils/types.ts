@@ -1,3 +1,4 @@
+import { Entity } from '../engine/entity.ts';
 import {THREE} from './three-defs.ts';
 
 
@@ -28,4 +29,26 @@ export type Bullet = {
   TotalLife: number;
   Alive: boolean;
   Colours: THREE.Color[];
+}
+
+
+export type couple<T> = [T, T];
+
+export type Client = {
+  position: couple<number>;
+  dimensions: couple<number>;
+  _cells: {
+    min: couple<number> | null;
+    max: couple<number> | null;
+    nodes: Array<Array<Node>> | null;
+  };
+  _queryId: number;
+  id_: number;
+  entity: Entity;
+}
+
+export type Node = {
+  next: Node | null;
+  prev: Node | null;
+  client: Client;
 }

@@ -10,20 +10,20 @@ import { TieFighterController } from '../entities/tie-fighter-controller.ts';
 import { XWingController } from '../entities/xwing-controller.ts';
 import { BasicRigidBody } from '../physics/basic-rigid-body.ts';
 import { XWingEffects } from '../effects/xwing-effects.ts';
+import { EnemyAIController } from '../entities/enemy-ai-controller.ts';
+import { SpatialGridController } from './spatial-grid-controller.ts';
+import { SpatialHashGrid } from './spatial-hash-grid.ts';
 
 
 export class PlayerSpawner extends Component {
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
-    // grid: any; // Replace with actual type if available
     manager: EntityManager;
-
   }
   constructor(params: {
                         camera: THREE.Camera;
                         scene: THREE.Scene;
-                        // grid: any; // Replace with actual type if available
                         manager: EntityManager;
                       }) {
     super();
@@ -88,14 +88,14 @@ export class TieFighterSpawner extends Component {
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
-    // grid: any; // Replace with actual type if available
+    grid: SpatialHashGrid;
     manager: EntityManager;
   };
 
   constructor(params : {
                           camera: THREE.Camera;
                           scene: THREE.Scene;
-                          // grid: any; // Replace with actual type if available
+                          grid: SpatialHashGrid;
                           manager: EntityManager;
                         }) {
     super();
@@ -110,9 +110,7 @@ export class TieFighterSpawner extends Component {
     };
 
     const e = new Entity();
-    // e.AddComponent(
-    //   new spatial_grid_controller.SpatialGridController(
-    //       {grid: this.params_.grid}));
+    e.AddComponent(new SpatialGridController(this.params_.grid));
     e.AddComponent(new RenderComponent({
       scene: params.scene,
       resourcePath: './resources/models/tie-fighter-gltf/',
@@ -129,6 +127,8 @@ export class TieFighterSpawner extends Component {
     // }));
     // // DEMO
     // e.AddComponent(new floating_descriptor.FloatingDescriptor());
+    e.AddComponent(new EnemyAIController())
+
     // e.AddComponent(new enemy_ai_controller.EnemyAIController({
     //   grid: this.params_.grid,
     // }));
@@ -143,13 +143,13 @@ export class XWingSpawner extends Component {
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
-    // grid: any; // Replace with actual type if available
+    grid: SpatialHashGrid;
     manager: EntityManager;
   };
   constructor(params : {
                           camera: THREE.Camera;
                           scene: THREE.Scene;
-                          // grid: any; // Replace with actual type if available
+                          grid: SpatialHashGrid;
                           manager: EntityManager;
                         }) {  
     super();
@@ -165,9 +165,7 @@ export class XWingSpawner extends Component {
     };
 
     const e = new Entity();
-    // e.AddComponent(
-    //   new spatial_grid_controller.SpatialGridController(
-    //       {grid: this.params_.grid}));
+    e.AddComponent(new SpatialGridController(this.params_.grid));
     e.AddComponent(new RenderComponent({
       scene: params.scene,
       resourcePath: './resources/models/x-wing/',
@@ -188,7 +186,8 @@ export class XWingSpawner extends Component {
     //   shields: 50,
     // }));
     // // e.AddComponent(new floating_descriptor.FloatingDescriptor());
-    // e.AddComponent(new enemy_ai_controller.EnemyAIController({
+    e.AddComponent(new EnemyAIController())
+    // {
     //   grid: this.params_.grid,
     // }));
     // e.AddComponent(
