@@ -1,4 +1,4 @@
-import {THREE, OrbitControls} from '../utils/three-defs.ts';
+import {THREE} from '../utils/three-defs.ts';
 
 import {Component} from "../engine/entity.ts";
 
@@ -124,30 +124,6 @@ const _NOISE_GLSL = `
     return total;
   }
   `;
-
-
-const _SKY_VS = `
-  varying vec3 vWorldPosition;
-  
-  void main() {
-    vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
-    vWorldPosition = worldPosition.xyz;
-  
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-  }`;
-  
-  
-const _SKY_FS = `
-  uniform samplerCube background;
-  
-  varying vec3 vWorldPosition;
-  
-  void main() {
-    vec3 viewDirection = normalize(vWorldPosition - cameraPosition);
-    vec3 stars = textureCube(background, viewDirection).xyz;
-  
-    gl_FragColor = vec4(stars, 1.0);
-  }`;
 
 const _PLANET_VS = `
   varying vec3 vWorldPosition;

@@ -13,7 +13,7 @@ const _MAX_ANGLE = 0.9;
 export class EnemyAIController extends Component {
 
   grid_: SpatialGridController;
-  maxSteeringForce_: number;
+  maxSteeringAcc_: number;
   maxSpeed_: number;
   acceleration_: number;
   velocity_: THREE.Vector3;
@@ -28,7 +28,7 @@ export class EnemyAIController extends Component {
   }
 
   Init_() {
-    this.maxSteeringForce_ = 30;
+    this.maxSteeringAcc_ = 30;
     this.maxSpeed_  = 100;
     this.acceleration_ = 10;
     this.velocity_ = new THREE.Vector3(0, 0, -1);
@@ -53,34 +53,35 @@ export class EnemyAIController extends Component {
 
     // const originVelocity = this.ApplySeek_(
     //     this.FindEntity('star-destroyer'));
-    const originVelocity = this.ApplySeek_(this.target_);
+    const originAcc = this.ApplySeek_(this.target_);
 
-    const wanderVelocity = this.ApplyWander_();
-    const collisionVelocity = this.ApplyCollisionAvoidance_();
-    const attackVelocity = this.ApplyAttack_();
+    const wanderAcc = this.ApplyWander_();
+    const collisionAcc = this.ApplyCollisionAvoidance_();
+    const attackAcc = this.ApplyAttack_();
 
-    const steeringForce = new THREE.Vector3(0, 0, 0);
-    // steeringForce.add(separationVelocity);
-    // steeringForce.add(alignmentVelocity);
-    // steeringForce.add(cohesionVelocity);
-    steeringForce.add(originVelocity);
-    steeringForce.add(wanderVelocity);
-    steeringForce.add(collisionVelocity);
-    steeringForce.add(attackVelocity);
+    const steeringAcc = new THREE.Vector3(0, 0, 0);
+    // steeringAcc.add(separationAcc);
+    // steeringAcc.add(alignmentAcc);
+    // steeringAcc.add(cohesionAcc);
+    steeringAcc.add(originAcc);
+    steeringAcc.add(wanderAcc);
+    steeringAcc.add(collisionAcc);
+    steeringAcc.add(attackAcc);
 
-    steeringForce.multiplyScalar(this.acceleration_ * timeElapsed);
+    steeringAcc.multiplyScalar(this.acceleration_);
 
     // // Clamp the force applied
-    if (steeringForce.length() > this.maxSteeringForce_ * timeElapsed) {
-      steeringForce.normalize();
-      steeringForce.multiplyScalar(this.maxSteeringForce_ * timeElapsed);
+    if (steeringAcc.length() > this.maxSteeringAcc_) {
+      steeringAcc.normalize();
+      steeringAcc.multiplyScalar(this.maxSteeringAcc_);
     }
 
-    this.velocity_.add(steeringForce);
+    steeringAcc.multiplyScalar(timeElapsed);
+    this.velocity_.add(steeringAcc);
 
     // // Clamp velocity
     this.velocity_.normalize();
-    const forward = this.velocity_.clone();
+    const unit_vel = this.velocity_.clone();
     this.velocity_.multiplyScalar(this.maxSpeed_);
 
     const frameVelocity = this.velocity_.clone();
@@ -89,15 +90,14 @@ export class EnemyAIController extends Component {
 
     this.Parent!.SetPosition(frameVelocity);
 
-    const t = 1.0 - Math.pow(0.05, timeElapsed);
-
+    
     const mat = new THREE.Matrix4();
     const quat = new THREE.Quaternion();
-    mat.lookAt(
-        new THREE.Vector3(), forward, THREE.Object3D.DEFAULT_UP);
+    mat.lookAt(new THREE.Vector3(), unit_vel, THREE.Object3D.DEFAULT_UP);
     quat.setFromRotationMatrix(mat);
     this.Parent!.SetQuaternion(quat);
-
+      
+    // const t = 1.0 - Math.pow(0.05, timeElapsed);
     // this.quaternion_.setFromUnitVectors(
     //   new THREE.Vector3(0, 1, 0), forward);
     // this.Parent.Quaternion.slerp(this.quaternion_, t);

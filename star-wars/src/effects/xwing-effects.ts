@@ -1,7 +1,7 @@
 import {THREE} from '../utils/three-defs.ts';
 
 import {ParticleEmitter, ParticleSystem} from "./particle-system.js";
-import type { Particle } from '../utils/types.ts';
+import type { Message, Particle } from '../utils/types.ts';
 import {Component, Entity} from "../engine/entity.ts";
 import {rand_range} from "../utils/math.ts";
 import {RenderComponent} from "../engine/render-component.ts";
@@ -10,12 +10,14 @@ class FireFXEmitter extends ParticleEmitter {
   offset_: THREE.Vector3;
   parent_: Entity;
   blend_: number;
+  isBoost: boolean;
 
   constructor(offset: THREE.Vector3, parent: Entity) {
     super();
     this.offset_ = offset;
     this.parent_ = parent;
     this.blend_ = 0.0;
+    this.isBoost = false;
   }
 
   OnUpdate_() {
@@ -27,9 +29,15 @@ class FireFXEmitter extends ParticleEmitter {
     }
   }
 
+  SetBoost(isBoost:boolean) {
+    this.isBoost = isBoost;
+  }
+
   CreateParticle_() : Particle {
     let life = rand_range(0.03, 0.2);
-    // let life = rand_range(1, 2);
+    if (this.isBoost)
+        life += 1.0;
+
     return {
         position: this.offset_.clone(),
         size: rand_range(0.5, 1.0),
@@ -90,6 +98,18 @@ export class XWingEffects extends Component {
     this.offsetIndex_ = 0;
 
     this.SetupFireFX_();
+  }
+
+  InitComponent(): void {
+    this.RegisterHandler_('player.boost_update', (msg: Message<boolean>) => { this.OnBoost_(msg.value!); });
+  }
+
+  OnBoost_(isBoost: boolean) {
+    for (let i = 0; i < this.blasterFX_!.emitters_.length; ++i) {
+      const emitter = this.blasterFX_!.emitters_[i] as FireFXEmitter;
+      emitter.SetBoost(isBoost);
+    }
+    // console.log('BOOST FX: ', isBoost);
   }
 
   Destroy() {

@@ -62,6 +62,11 @@ export class PlayerInput extends Component {
       case 'Backspace': // BACKSPACE
         currInput.backspace = true;
         break;
+      case 'ArrowLeft': // LEFT
+        currInput.axis2Side = -1.0;
+        break;
+      case 'ArrowRight': // RIGHT
+        currInput.axis2Side = 1.0;
     }
   }
 
@@ -98,6 +103,12 @@ export class PlayerInput extends Component {
         break;
       case 'Backspace': // BACKSPACE
         currInput.backspace = false;
+        break;
+      case 'ArrowLeft': // LEFT
+        currInput.axis2Side = 0.0;
+        break;
+      case 'ArrowRight': // RIGHT
+        currInput.axis2Side = 0.0;
         break;
     }
   }

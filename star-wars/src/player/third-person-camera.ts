@@ -21,6 +21,7 @@ export class ThirdPersonCamera extends Component {
     this.camera_ = params.camera;
 
     this.currentPosition_ = new THREE.Vector3();
+    this.camera_.setRotationFromQuaternion(params.target.Quaternion.clone());
     this.SetPass(1);
   }
 

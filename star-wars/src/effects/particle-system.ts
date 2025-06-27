@@ -146,21 +146,18 @@ export class ParticleEmitter {
   }
   
   CreateParticle_() {
-    const life = (Math.random() * 0.75 + 0.25) * 5.0;
+    const life = 0;
     return {
-        position: new THREE.Vector3(
-            (Math.random() * 2 - 1) * 4.0 + -44,
-            (Math.random() * 2 - 1) * 4.0 + 0,
-            (Math.random() * 2 - 1) * 4.0 + 12),
-        size: (Math.random() * 0.5 + 0.5) * 2.0,
+        position: new THREE.Vector3(0.0,0.0,0.0),
+        size: 0.0,
         colour: new THREE.Color(),
         alpha: 1.0,
         life: life,
         maxLife: life,
-        rotation: Math.random() * 2.0 * Math.PI,
-        velocity: new THREE.Vector3(0, 1, 0),
+        rotation: 0.0,
+        velocity: new THREE.Vector3(0, 0, 0),
         blend: 0.0,
-        drag: 1.0,
+        drag: 0.0,
     };
   }
 
@@ -242,10 +239,15 @@ export class ParticleSystem {
         uniforms: uniforms,
         vertexShader: _VS,
         fragmentShader: _FS,
+        
         blending: THREE.CustomBlending,
         blendEquation: THREE.AddEquation,
         blendSrc: THREE.OneFactor,
         blendDst: THREE.OneMinusSrcAlphaFactor,
+        // result = (srcColor * 1) + (dstColor * (1 – srcAlpha))
+        // instead of the default: result = (srcColor * srcAlpha) + (dstColor * (1 – srcAlpha))
+        // but same result_alpha = srcAlpha + (dstAlpha * (1 – srcAlpha))
+        
         depthTest: true,
         depthWrite: false,
         transparent: true,

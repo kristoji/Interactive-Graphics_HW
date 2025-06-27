@@ -10,6 +10,7 @@ export class PlayerController extends Component {
   decceleration_: THREE.Vector3;
   acceleration_: THREE.Vector3;
   velocity_: THREE.Vector3;
+  isBoosting_: boolean = false;
 
 
   constructor() {
@@ -21,8 +22,9 @@ export class PlayerController extends Component {
   }
 
   InitEntity() {
-    this.decceleration_ = new THREE.Vector3(-0.0005, -0.0001, -1);
-    this.acceleration_ = new THREE.Vector3(100, 0.5, 25000);
+    this.decceleration_ = new THREE.Vector3(-0.0005, -0.0001, -0.5);
+    this.acceleration_ = new THREE.Vector3(0, 0.5, 0);
+
     this.velocity_ = new THREE.Vector3(0, 0, 0);
   }
 
@@ -50,7 +52,24 @@ export class PlayerController extends Component {
       return;
     }
 
+    const acc = this.acceleration_.clone();
+    if (input.shift) {
+      acc.multiplyScalar(2.0);
+      acc.z -= 50.0;
+      if (!this.isBoosting_) {
+        this.isBoosting_ = true;
+        this.Broadcast({topic: 'player.boost_update', value: true});
+      }
+    } else {
+      if (this.isBoosting_) {
+        this.isBoosting_ = false;
+        this.Broadcast({topic: 'player.boost_update', value: false});
+      }
+    }
     const velocity = this.velocity_;
+
+    velocity.z += acc.z * timeInSeconds;
+
     const frameDecceleration = new THREE.Vector3(
         velocity.x * this.decceleration_.x,
         velocity.y * this.decceleration_.y,
@@ -59,7 +78,7 @@ export class PlayerController extends Component {
     frameDecceleration.multiplyScalar(timeInSeconds);
 
     velocity.add(frameDecceleration);
-    velocity.z = -clamp(Math.abs(velocity.z), 50.0, 125.0);
+    velocity.z = -clamp(Math.abs(velocity.z), 50.0, 100.0);
 
     const _PARENT_Q = this.Parent!.Quaternion.clone();
     const _PARENT_P = this.Parent!.Position.clone();
@@ -68,10 +87,6 @@ export class PlayerController extends Component {
     const _A = new THREE.Vector3();
     const _R = _PARENT_Q.clone();
 
-    const acc = this.acceleration_.clone();
-    if (input.shift) {
-      acc.multiplyScalar(2.0);
-    }
 
     if (input.axis1Forward) {
       _A.set(1, 0, 0);
