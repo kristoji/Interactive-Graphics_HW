@@ -23,10 +23,12 @@ export class PlayerSpawner extends Component {
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
+    grid: SpatialHashGrid;
   }
   constructor(params: {
                         camera: THREE.Camera;
                         scene: THREE.Scene;
+                        grid: SpatialHashGrid;
                       }) {
     super();
     this.params_ = params;
@@ -62,9 +64,10 @@ export class PlayerSpawner extends Component {
     player.AddComponent(new PlayerInput());
     // player.AddComponent(new player_ps4_input.PlayerPS4Input());
     player.AddComponent(new PlayerController());
-    player.AddComponent(new BasicRigidBody({
-      box: new THREE.Vector3(18, 6, 8),
-    }));
+    // player.AddComponent(new BasicRigidBody({
+    //   box: new THREE.Vector3(18, 6, 8),
+    // }));
+    player.AddComponent(new SpatialGridController(this.params_.grid));
     player.AddComponent(new HealthController({
       maxHealth: 50,
       shields: 50,
@@ -76,13 +79,15 @@ export class PlayerSpawner extends Component {
           target: player}));
     player.AddComponent(
         new ShieldsController());
+    player.Attributes!.roughRadius = 10;
     // player.AddComponent(
-    //     new shields_ui_controller.ShieldsUIController(params));
-    // player.AddComponent(
-    //     new atmosphere_effect.AtmosphereEffect(params));
-
-    // this.params_.manager.Add(player, 'player');
-    this.Manager!.Add(player, 'player');
+      //     new shields_ui_controller.ShieldsUIController(params));
+      // player.AddComponent(
+        //     new atmosphere_effect.AtmosphereEffect(params));
+        
+        // this.params_.manager.Add(player, 'player');
+        this.Manager!.Add(player, 'player');
+        player.Broadcast({topic:'physics.loaded'});
 
 
     return player;
@@ -122,9 +127,9 @@ export class TieFighterSpawner extends Component {
       colour: new THREE.Color(0xFFFFFF),
     }));
     e.AddComponent(new TieFighterController(params));
-    e.AddComponent(new BasicRigidBody({
-      box: new THREE.Vector3(15, 15, 15)
-    }));
+    // e.AddComponent(new BasicRigidBody({
+    //   box: new THREE.Vector3(15, 15, 15)
+    // }));
     e.AddComponent(new HealthController({
       maxHealth: 50,
     }));
@@ -136,7 +141,9 @@ export class TieFighterSpawner extends Component {
     //   grid: this.params_.grid,
     // }));
 
+    e.Attributes!.roughRadius = 10;
     this.Manager!.Add(e);
+    e.Broadcast({topic:'physics.loaded'});
 
     return e;
   }
@@ -179,9 +186,9 @@ export class XWingSpawner extends Component {
     }));
     e.AddComponent(new XWingEffects(params));
     e.AddComponent(new XWingController(params));
-    e.AddComponent(new BasicRigidBody({
-      box: new THREE.Vector3(15, 15, 15)
-    }));
+    // e.AddComponent(new BasicRigidBody({
+    //   box: new THREE.Vector3(15, 15, 15)
+    // }));
     e.AddComponent(new HealthController({
       maxHealth: 50,
       shields: 50,
@@ -193,7 +200,12 @@ export class XWingSpawner extends Component {
     // }));
     e.AddComponent(new ShieldsController());
 
+    e.Attributes!.roughRadius = 10;
+    
+    
     this.Manager!.Add(e);
+    
+    e.Broadcast({topic:'physics.loaded'});
 
     return e;
   }

@@ -61,6 +61,7 @@ class StarWarsGame {
         scene: this.scene_,
         camera: this.camera_,
         texture: './resources/textures/fx/blaster.jpg',
+        grid: this.grid_,
     }));
     this.entityManager_.Add(fx, 'fx');
 
@@ -108,6 +109,7 @@ class StarWarsGame {
       n.multiplyScalar(300);
       n.add(new THREE.Vector3(0, 0, 800));
       e.SetPosition(n);
+      // e.SetName('jonny');
     }
 
     // spawner.GetComponent('StarDestroyerSpawner').Spawn();

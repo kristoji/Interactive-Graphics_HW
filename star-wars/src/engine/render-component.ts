@@ -82,6 +82,17 @@ export class RenderComponent extends Component {
 
   InitEntity() {
     this._LoadModels();
+
+    // if (this.Parent!.Attributes!.roughRadius) {
+
+    //     const geometry = new THREE.SphereGeometry(this.Parent!.Attributes!.roughRadius);
+    //     const material = new THREE.MeshBasicMaterial( {color: 0x00ff00, opacity: 0.1, transparent:true} );
+    //     let debug_ = new THREE.Mesh(geometry, material);
+    
+    //     // debug_.quaternion.copy(e.Quaternion);
+    //     // params.scene.add(debug_);
+    //     this.group_.add(debug_);
+    // }
   }
 
   InitComponent() {

@@ -1,7 +1,7 @@
 import {THREE} from '../utils/three-defs.ts';
 import {Bullet, Hit} from '../utils/types.ts';
 
-import {Component} from '../engine/entity.ts';
+import {Component, Entity} from '../engine/entity.ts';
 import { RenderComponent } from '../engine/render-component.ts';
 import { ParticleSystem } from '../effects/particle-system.ts';
 import { BlasterSystem } from '../effects/blaster.ts';
@@ -9,6 +9,7 @@ import { LoadController } from '../engine/load-controller.ts';
 import { ShootFlashFXEmitter } from '../effects/flash-effect.ts';
 import { AmmoJSController } from '../physics/ammojs-component.ts';
 import { TinyExplosionSpawner } from '../engine/spawners.ts';
+import { SpatialGridController } from '../engine/spatial-grid-controller.ts';
 
 
 export class XWingController extends Component {
@@ -25,6 +26,7 @@ export class XWingController extends Component {
   shots_: Bullet[];
   spotlight_: THREE.SpotLight;
   blasterFX_: ParticleSystem | null = null;
+  grid_: SpatialGridController | null = null;
 
   
   constructor(params : {
@@ -65,6 +67,7 @@ export class XWingController extends Component {
   }
 
   InitEntity() {
+    this.grid_ = this.Parent!.GetComponent('SpatialGridController') as SpatialGridController;
     const group = (this.GetComponent('RenderComponent')! as RenderComponent).group_;
     this.blasterFX_ = new ParticleSystem({
         camera: this.params_.camera,
@@ -153,27 +156,49 @@ export class XWingController extends Component {
       return p.Life > 0.0;
     });
 
-    const physics = this.FindEntity('physics')!.GetComponent('AmmoJSController') as AmmoJSController;
-    for (let s of this.shots_) {
-      const hits = physics.RayTest(s.Start, s.End);
-      for (let h of hits) {
-        if (h.name == this.Parent!.Name) {
-          continue;
-        }
-        const e = this.FindEntity(h.name)!;
-        e.Broadcast<Hit>({topic: 'player.hit', value: {
-                                                        dmg: this.params_.blasterStrength,
-                                                        pos: h.position}
-                                                      });
-        s.Life = 0.0;
-        // console.log('HIT ' + e.Name + ' with blaster shot from ' + this.Parent!.Name);
+    // const physics = this.FindEntity('physics')!.GetComponent('AmmoJSController') as AmmoJSController;
+    // for (let s of this.shots_) {
+    //   const hits = physics.RayTest(s.Start, s.End);
+    //   for (let h of hits) {
+    //     if (h.name == this.Parent!.Name) {
+    //       continue;
+    //     }
+    //     const e = this.FindEntity(h.name)!;
+    //     e.Broadcast<Hit>({topic: 'player.hit', value: {
+    //                                                     dmg: this.params_.blasterStrength,
+    //                                                     pos: h.position}
+    //                                                   });
+    //     s.Life = 0.0;
+    //     // console.log('HIT ' + e.Name + ' with blaster shot from ' + this.Parent!.Name);
 
-        // const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
-        // explosion.Spawn(h.position);    
-      }
-    }
+    //     // const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
+    //     // explosion.Spawn(h.position);    
+    //   }
+    // }
   }
 
+  CheckCollisions_() {
+    const potentialList = this.grid_!.FindNearbyEntities(50);
+    if (potentialList.length == 0) {
+      return;
+    }
+    const _P = new THREE.Vector3();
+
+    for (const c of potentialList) {
+      const e = c.entity as Entity;
+      _P.copy(e.Position);
+      let dist = _P.distanceTo(this.Parent!.Position);
+
+      let other_radius = e.Attributes!.roughRadius!;
+      let this_radius = this.Parent!.Attributes!.roughRadius!;
+      if (dist > (other_radius + this_radius)) {
+        continue; // Too far away
+      }
+      this.Parent!.Broadcast({topic: 'physics.collision'});
+      e.Broadcast({topic: 'physics.collision'});
+
+    }
+  }
 
   Update(timeElapsed: number) {
     this.cooldownTimer_ = Math.max(this.cooldownTimer_ - timeElapsed, 0.0);
@@ -181,5 +206,6 @@ export class XWingController extends Component {
 
     this.blasterFX_!.Update(timeElapsed);
     this.UpdateShots_();
+    this.CheckCollisions_();
   }
 };

@@ -1,6 +1,7 @@
 import {THREE} from '../utils/three-defs.ts';
-import {Bullet} from '../utils/types.ts';
-import {Component} from "../engine/entity.ts";
+import {Bullet, Hit} from '../utils/types.ts';
+import {Component, Entity} from "../engine/entity.ts";
+import { SpatialHashGrid } from '../engine/spatial-hash-grid.ts';
 
 const _VS = `
 out vec2 v_UV;
@@ -30,16 +31,19 @@ export class BlasterSystem extends Component {
     scene: THREE.Scene;
     camera: THREE.Camera;
     texture: string;
+    grid: SpatialHashGrid;
   };
   material_: THREE.ShaderMaterial;
   geometry_: THREE.BufferGeometry;
   particleSystem_: THREE.Mesh;
   liveParticles_: Bullet[];
+  blasterStrength: number = 10.0;
 
   constructor(params: {
                         scene: THREE.Scene;
                         camera: THREE.Camera;
                         texture: string;
+                        grid: SpatialHashGrid;
                       }) {
     super();
     this.params_ = params;
@@ -92,11 +96,11 @@ export class BlasterSystem extends Component {
   }
 
   Update(timeInSeconds: number) {
-    // const _R = new THREE.Ray();
-    // const _M = new THREE.Vector3();
-    // const _S = new THREE.Sphere();
-    // const _C = new THREE.Vector3();
-
+    const _R = new THREE.Ray();
+    const _M = new THREE.Vector3();
+    const _S = new THREE.Sphere();
+    const _C = new THREE.Vector3();
+    // console.log("BlasterSystem Update", this.liveParticles_.length);
     for (const p of this.liveParticles_) {
       p.Life -= timeInSeconds;
       if (p.Life <= 0) {
@@ -113,39 +117,51 @@ export class BlasterSystem extends Component {
       }
 
       // instead of raycasting here, we exploit the lib in xwing controller
-      // // Find intersections
-      // _R.direction.copy(p.Velocity);
-      // _R.direction.normalize();
-      // _R.origin.copy(p.Start);
+      // Find intersections
+      _R.direction.copy(p.Velocity);
+      _R.direction.normalize();
+      _R.origin.copy(p.Start);
 
-      // const blasterLength = p.End.distanceTo(p.Start);
-      // _M.addVectors(p.Start, p.End);
-      // _M.multiplyScalar(0.5);
+      const blasterLength = p.End.distanceTo(p.Start);
+      _M.addVectors(p.Start, p.End);
+      _M.multiplyScalar(0.5);
 
       // const potentialList = this._params.visibility.GetLocalEntities(_M, blasterLength * 0.5);
+      const potentialList = this.params_.grid.FindNear([_M.x, _M.z], [blasterLength, blasterLength]);
 
-      // // Technically we should sort by distance, but I'll just use the first hit. Good enough.
-      // if (potentialList.length == 0) {
-      //   continue;
-      // }
+      // const potentialList = this.params_.grid.GetEntities();
 
-      // for (let candidate of potentialList) {
-      //   _S.center.copy(candidate.Position);
-      //   _S.radius = 2.0;
+      // Technically we should sort by distance, but I'll just use the first hit. Good enough.
+      if (potentialList.length == 0) {
+        continue;
+      }
+      // console.log(potentialList.length);
 
-      //   if (!_R.intersectSphere(_S, _C)) {
-      //     continue;
-      //   }
+      for (let candidate of potentialList) {
+        let e = candidate.entity as Entity;
+        // console.log("Checking", e.Name);
+        // let e = candidate as Entity;
+        _S.center.copy(e.Position);
+        _S.radius = e.Attributes!.roughRadius!;
 
-      //   if (_C.distanceTo(p.Start) > blasterLength) {
-      //     continue;
-      //   }
+        if (!_R.intersectSphere(_S, _C)) {
+          continue;
+        }
 
-      //   p.Alive = false;
-      //   candidate.TakeDamage(100.0);
-      //   break;
-      // }
+        if (_C.distanceTo(p.Start) > blasterLength) {
+          continue;
+        }
+        console.log("HIT" + e.Name);
+
+        p.Alive = false;
+        e.Broadcast<Hit>({topic: 'player.hit', value: {
+                                                        dmg: this.blasterStrength,
+                                                        pos: _C}
+                                                      });
+        break;
+      }
     }
+    // console.log("BlasterSystem Update after", this.liveParticles_.length);
 
     this.liveParticles_ = this.liveParticles_.filter(p => {
       return p.Alive;

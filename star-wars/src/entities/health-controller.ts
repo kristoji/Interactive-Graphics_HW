@@ -34,10 +34,10 @@ export class HealthController extends Component {
 
   InitComponent() {
     this.RegisterHandler_('player.hit', (m) => { this.OnHit_(m); });
-    this.RegisterHandler_('physics.collision', (m) => { this.OnCollision_(m); });
+    this.RegisterHandler_('physics.collision', () => { this.OnCollision_(); });
   }
 
-  OnCollision_(_) {
+  OnCollision_() {
     if (this.Parent!.Attributes!.dead) {
       return;
     }

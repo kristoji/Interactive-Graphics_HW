@@ -29,6 +29,8 @@ export class BasicRigidBody extends Component {
 
     this.body_ = (this.FindEntity('physics')!.GetComponent('AmmoJSController') as AmmoJSController).CreateBox(
         pos, quat, this.params_.box, {name: this.Parent!.Name});
+
+    
     
     // const geometry = new THREE.BoxGeometry(1, 1, 1);
     // const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -36,8 +38,10 @@ export class BasicRigidBody extends Component {
     // this.debug_.scale.copy(this.params_.box);
     // this.debug_.position.copy(pos);
     // this.debug_.quaternion.copy(quat);
+    // this.debug_.geometry.computeBoundingBox();
     // let scene = (this.FindEntity('threejs')!.GetComponent('ThreeJSController')! as ThreeJSController).scene_;
     // scene.add(this.debug_);
+    
 
     this.Parent!.Attributes!.roughRadius = Math.max(
         this.params_.box.x,

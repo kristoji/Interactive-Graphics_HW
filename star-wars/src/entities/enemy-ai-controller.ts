@@ -106,6 +106,7 @@ export class EnemyAIController extends Component {
 
   Update(timeElapsed: number) {
     if (!this.Parent!.Attributes!.roughRadius) {
+      // this.ApplyCollisionAvoidance_();
       return;
     }
     this.ApplySteering_(timeElapsed);
@@ -149,7 +150,9 @@ export class EnemyAIController extends Component {
 
     const force = new THREE.Vector3(0, 0, 0);
 
+    // console.log("Collision avoidance for", this.Parent!.Name);
     for (const c of colliders) {
+      // console.log("Found", c.entity.Name);
       if (this.target_ && c.entity.ID == this.target_.ID) 
         continue; // Don't avoid the target
       
