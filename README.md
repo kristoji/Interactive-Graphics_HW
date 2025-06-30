@@ -9,3 +9,4 @@ Interactive Graphics Homeworks from the MEng in CS, Sapienza
 - [HW5 - Ray Tracing](https://kristoji.github.io/Interactive-Graphics_HW/project5_RayTracing/project6.html)
 - [HW6 - Animations](https://kristoji.github.io/Interactive-Graphics_HW/project6_Animations/project7.html)
 - [Rocket Game](https://kristoji.github.io/Interactive-Graphics_HW/rocket-game/dist/index.html)
+- [Star Wars Game](https://kristoji.github.io/Interactive-Graphics_HW/star-wars/dist/index.html)
