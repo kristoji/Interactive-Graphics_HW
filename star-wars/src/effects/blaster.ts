@@ -27,6 +27,7 @@ void main() {
 `;
 
 export class BlasterSystem extends Component {
+  name = 'BlasterSystem';
   params_: {
     scene: THREE.Scene;
     camera: THREE.Camera;

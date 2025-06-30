@@ -146,6 +146,7 @@ void main() {
 
 
 export class ShieldsController extends Component {
+  name = 'ShieldsController';
   timeElapsed_: number;
   shieldsVisible_: boolean;
   shieldsTimer_: number;
@@ -193,12 +194,6 @@ export class ShieldsController extends Component {
     // console.log('Shields hit!');
 
     if (this.Parent!.Attributes!.shields! > 0) {
-      // const loader = this.FindEntity('loader').GetComponent('LoadController');
-      // loader.LoadSound('./resources/sounds/', 'shields.ogg', (s) => {
-      //   const group = this.GetComponent('RenderComponent').group_;
-      //   group.add(s);
-      //   s.play();  
-      // });
 
       this.shieldsVisible_ = true;
       this.shieldsTimer_ = 0.0;

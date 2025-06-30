@@ -18,6 +18,7 @@ import { ShieldsController } from '../controllers/shields-controller.ts';
 
 
 export class PlayerSpawner extends Component {
+  name = 'PlayerSpawner';
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
@@ -78,6 +79,7 @@ export class PlayerSpawner extends Component {
 };
 
 export class TieFighterSpawner extends Component {
+  name = 'TieFighterSpawner';
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
@@ -123,6 +125,7 @@ export class TieFighterSpawner extends Component {
 };
 
 export class XWingSpawner extends Component {
+  name = 'XWingSpawner';
   params_: {
     camera: THREE.Camera;
     scene: THREE.Scene;
@@ -179,6 +182,7 @@ export class XWingSpawner extends Component {
 
 
 export class ShipSmokeSpawner extends Component {
+  name = 'ShipSmokeSpawner';
   params_ : {
     camera: THREE.Camera,
     scene: THREE.Scene,
@@ -211,6 +215,7 @@ export class ShipSmokeSpawner extends Component {
 };
 
 export class ExplosionSpawner extends Component {
+  name = 'ExplosionSpawner';
   params_ : {
     camera: THREE.Camera,
     scene: THREE.Scene,
@@ -241,6 +246,7 @@ export class ExplosionSpawner extends Component {
 };
 
 export class TinyExplosionSpawner extends Component {
+  name = 'TinyExplosionSpawner';
   params_ : {
     camera: THREE.Camera,
     scene: THREE.Scene,

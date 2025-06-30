@@ -6,6 +6,7 @@ import { EntityManager } from '../engine/entity-manager.ts';
 
 
 export class PlayerController extends Component {
+  name = 'PlayerController';
   dead_: boolean = false;
   decceleration_: THREE.Vector3;
   acceleration_: THREE.Vector3;

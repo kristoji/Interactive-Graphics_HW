@@ -78,7 +78,7 @@ export class Entity {
         if (this.components_ === null) {
             this.components_ = {};
         }
-        this.components_[component.constructor.name] = component;
+        this.components_[component.name] = component;
 
         // console.log(`Entity.AddComponent: ${this.Name} (${this.ID}) - ${component.constructor.name}`);
 
@@ -154,6 +154,7 @@ export class Entity {
 }
 
 export class Component {
+    name: string = "";
     parent_: Entity | null = null;
     pass_: number = 0;
 

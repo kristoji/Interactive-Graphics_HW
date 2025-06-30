@@ -4,6 +4,7 @@ import {Component, Entity} from '../engine/entity.ts';
 
 
 export class ThirdPersonCamera extends Component {
+  name = 'ThirdPersonCamera';
   params_: {
     camera: THREE.Camera;
     target: Entity;
@@ -28,6 +29,9 @@ export class ThirdPersonCamera extends Component {
   _CalculateIdealOffset() {
     const idealOffset = new THREE.Vector3(0, 10, 20);
     const input = this.Parent!.Attributes!.InputCurrent!;
+    if (!input) {
+      return idealOffset;
+    }
 
     if (input.axis1Side) {
       idealOffset.lerp(
@@ -51,6 +55,7 @@ export class ThirdPersonCamera extends Component {
   }
 
   Update(timeElapsed) {
+    console.log('ThirdPersonCamera Update');
     const idealOffset = this._CalculateIdealOffset();
 
     const t1 = 1.0 - Math.pow(0.05, timeElapsed);

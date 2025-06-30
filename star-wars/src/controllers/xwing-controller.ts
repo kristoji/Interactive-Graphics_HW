@@ -12,6 +12,7 @@ import { SpatialGridController } from '../engine/spatial-grid-controller.ts';
 
 
 export class XWingController extends Component {
+  name = 'XWingController';
   params_: {
     camera: THREE.Camera;
     blasterStrength: number;

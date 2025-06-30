@@ -222,6 +222,7 @@ const _PLANET_FS = _NOISE_GLSL + `
   }`;
 
 export class ThreeJSController extends Component {
+  name = 'ThreeJSController';
   threejs_: THREE.WebGLRenderer;
   camera_: THREE.PerspectiveCamera;
   scene_: THREE.Scene;

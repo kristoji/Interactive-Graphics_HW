@@ -18,6 +18,7 @@ interface TextureAsset {
 }
 
 export class LoadController extends Component {
+  name = 'LoadController';
   textures_: Record<string, TextureAsset> = {};
   models_: Record<string, ModelAsset> = {};
   playing_: Entity[] = [];

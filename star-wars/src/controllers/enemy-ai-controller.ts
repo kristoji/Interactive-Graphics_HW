@@ -11,7 +11,7 @@ const _MAX_TARGET_DISTANCE = 1500;
 const _MAX_ANGLE = 0.9;
 
 export class EnemyAIController extends Component {
-
+  name = 'EnemyAIController';
   grid_: SpatialGridController;
   maxSteeringAcc_: number;
   maxSpeed_: number;

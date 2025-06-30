@@ -135,13 +135,6 @@ export class ExplodeEffect extends Component {
 
   InitEntity() {
     this.group_.position.copy(this.Parent!.Position);
-    // const loader = this.FindEntity('loader')!.GetComponent('LoadController') as LoadController;
-    // loader.LoadSound('./resources/sounds/', 'explosion.ogg', (s) => {
-    //   this.group_.add(s);
-    //   s.setRefDistance(100);
-    //   s.setMaxDistance(1000);
-    //   s.play();  
-    // });
 
     for (let i = 0; i < 3; ++i) {
       const r = 4.0;
@@ -229,13 +222,6 @@ export class TinyExplodeEffect extends Component {
 
   InitEntity() {
     this.group_.position.copy(this.Parent!.Position);
-    // const loader = this.FindEntity('loader').GetComponent('LoadController');
-    // loader.LoadSound('./resources/sounds/', 'explosion.ogg', (s) => {
-    //   this.group_.add(s);
-    //   s.setRefDistance(10);
-    //   s.setMaxDistance(5000);
-    //   s.play();  
-    // });
 
     const p = this.Parent!.Position.clone();
 

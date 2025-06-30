@@ -4,6 +4,7 @@ import type {Input} from '../utils/types.ts';
 
 
 export class PlayerInput extends Component {
+  name = 'PlayerInput';
   constructor() {
     super();
   }
@@ -22,7 +23,7 @@ export class PlayerInput extends Component {
     };
     this.Parent!.Attributes!.InputPrevious = {
       ...this.Parent!.Attributes!.InputCurrent};
-
+    console.log('PlayerInput initialized');
     document.addEventListener('keydown', (e) => this.OnKeyDown_(e), false);
     document.addEventListener('keyup', (e) => this.OnKeyUp_(e), false);
   }

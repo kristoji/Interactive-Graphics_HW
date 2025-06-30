@@ -5,6 +5,7 @@ import type {couple, Client, Node} from '../utils/types.ts';
 
 
 export class SpatialGridController extends Component {
+  name = 'SpatialGridController';
   grid_: SpatialHashGrid;
   client_: Client | null = null;
   

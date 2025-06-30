@@ -5,6 +5,7 @@ import type {t_Attributes, Message, Hit} from '../utils/types.ts';
 import { ExplosionSpawner, ShipSmokeSpawner, TinyExplosionSpawner } from '../engine/spawners.ts';
 
 export class HealthController extends Component {
+  name = 'HealthController';
   params_: {
     maxHealth: number;
     shields?: number;

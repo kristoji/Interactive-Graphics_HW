@@ -4,6 +4,7 @@ import type {couple, Client, Node} from '../utils/types.ts';
 import { Entity } from './entity.ts';
 
 export class SpatialHashGrid {
+  name = 'SpatialHashGrid';
   _cells: Array<Array<Node | null>>;
   _dimensions: couple<number>;
   _bounds: couple<couple<number>>;

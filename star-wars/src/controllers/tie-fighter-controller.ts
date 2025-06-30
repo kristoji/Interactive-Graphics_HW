@@ -6,6 +6,7 @@ import { SpatialGridController } from '../engine/spatial-grid-controller.ts';
 
 
 export class TieFighterController extends Component {
+  name = 'TieFighterController';
   
   params_: { camera: THREE.Camera; scene: THREE.Scene; blasterStrength: number; };
   cooldownTimer_: number = 0.0;

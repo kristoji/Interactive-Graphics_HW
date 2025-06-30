@@ -6,6 +6,7 @@ import { LoadController } from './load-controller.ts';
 
 
 export class RenderComponent extends Component {
+  name = 'RenderComponent';
   params_: {
     scene: THREE.Scene;
     resourcePath: string;
@@ -127,8 +128,8 @@ export class RenderComponent extends Component {
   }
 
   _LoadModels() {
-    const loader = this.FindEntity('loader')!.GetComponent('LoadController');
-    (loader as LoadController).Load(
+    const loader = this.FindEntity('loader')!.GetComponent('LoadController') as LoadController;
+    loader.Load(
         this.params_.resourcePath, this.params_.resourceName, (mdl) => this._OnLoaded(mdl));
   }
 
