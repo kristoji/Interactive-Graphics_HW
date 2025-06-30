@@ -51,7 +51,7 @@ class StarWarsGame {
     fx.AddComponent(new BlasterSystem({
         scene: this.scene_,
         camera: this.camera_,
-        texture: './resources/textures/fx/blaster.jpg',
+        texture: '/resources/textures/fx/blaster.jpg',
         grid: this.grid_,
     }));
     this.entityManager_.Add(fx, 'fx');

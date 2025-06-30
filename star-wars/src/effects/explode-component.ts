@@ -123,7 +123,7 @@ export class ExplodeEffect extends Component {
     this.particles_ = new ParticleSystem({
         camera: params.camera,
         parent: params.scene,
-        texture: './resources/textures/fx/fire.png',
+        texture: '/resources/textures/fx/fire.png',
     });
     this.timer_ = 10.0;
   }
@@ -210,7 +210,7 @@ export class TinyExplodeEffect extends Component {
     this.particles_ = new ParticleSystem({
         camera: params.camera,
         parent: params.scene,
-        texture: './resources/textures/fx/fire.png',
+        texture: '/resources/textures/fx/fire.png',
     });
     this.timer_ = 10.0;
   }

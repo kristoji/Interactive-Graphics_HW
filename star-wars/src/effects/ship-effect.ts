@@ -72,7 +72,7 @@ export class ShipEffects extends Component {
         this.particles_ = new ParticleSystem({
             camera: this.params_.camera,
             parent: this.params_.scene,
-            texture: './resources/textures/fx/smoke.png',
+            texture: '/resources/textures/fx/smoke.png',
         });
         this.OnDamaged_();
     }

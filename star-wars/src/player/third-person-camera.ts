@@ -55,7 +55,6 @@ export class ThirdPersonCamera extends Component {
   }
 
   Update(timeElapsed) {
-    console.log('ThirdPersonCamera Update');
     const idealOffset = this._CalculateIdealOffset();
 
     const t1 = 1.0 - Math.pow(0.05, timeElapsed);

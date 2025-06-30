@@ -79,7 +79,7 @@ export class XWingEffects extends Component {
     this.blasterFX_ = new ParticleSystem({
         camera: this.params_.camera,
         parent: group,
-        texture: './resources/textures/fx/fire.png',
+        texture: '/resources/textures/fx/fire.png',
     });
 
     const x = 0.8 * 4;

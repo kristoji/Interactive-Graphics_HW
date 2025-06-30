@@ -72,7 +72,7 @@ export class XWingController extends Component {
     this.blasterFX_ = new ParticleSystem({
         camera: this.params_.camera,
         parent: group,
-        texture: './resources/textures/fx/blaster.jpg',
+        texture: '/resources/textures/fx/blaster.jpg',
     });
 
     this.spotlight_ = new THREE.SpotLight(
