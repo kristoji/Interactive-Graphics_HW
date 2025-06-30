@@ -6,11 +6,9 @@ import {LoadController} from './engine/load-controller.ts';
 import {ThreeJSController} from './engine/threejs-component.ts';
 
 import {THREE} from './utils/three-defs.js';
-import { ExplosionSpawner, PlayerSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
-import { TieFighterController } from './entities/tie-fighter-controller.ts';
+import { ExplosionSpawner, PlayerSpawner, ShipSmokeSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
 
 import * as MATH from './utils/math.js';
-import { AmmoJSController } from './physics/ammojs-component.ts';
 import { BlasterSystem } from './effects/blaster.ts';
 import { SpatialHashGrid } from './engine/spatial-hash-grid.ts';
 
@@ -21,7 +19,6 @@ class StarWarsGame {
   threejs_: ThreeJSController;
   camera_: THREE.PerspectiveCamera;
   scene_: THREE.Scene;
-  ammojs_: AmmoJSController;
   grid_: SpatialHashGrid;
 
   constructor() {
@@ -45,13 +42,7 @@ class StarWarsGame {
     threejs.AddComponent(new ThreeJSController());
     this.entityManager_.Add(threejs, 'threejs');
 
-    
-    const ammojs = new Entity();
-    ammojs.AddComponent(new AmmoJSController());
-    this.entityManager_.Add(ammojs, 'physics');
-
     // Hack
-    this.ammojs_ = ammojs.GetComponent('AmmoJSController') as AmmoJSController;
     this.threejs_ = threejs.GetComponent('ThreeJSController') as ThreeJSController;
     this.scene_ = this.threejs_.scene_;
     this.camera_ = this.threejs_.camera_;
@@ -80,6 +71,7 @@ class StarWarsGame {
     spawner.AddComponent(new XWingSpawner(basicParams));
     spawner.AddComponent(new ExplosionSpawner(basicParams));
     spawner.AddComponent(new TinyExplosionSpawner(basicParams));
+    spawner.AddComponent(new ShipSmokeSpawner(basicParams));
     this.entityManager_.Add(spawner, 'spawners');
     
     (spawner.GetComponent('PlayerSpawner') as PlayerSpawner).Spawn();
@@ -109,10 +101,8 @@ class StarWarsGame {
       n.multiplyScalar(300);
       n.add(new THREE.Vector3(0, 0, 800));
       e.SetPosition(n);
-      // e.SetName('jonny');
     }
 
-    // spawner.GetComponent('StarDestroyerSpawner').Spawn();
   }
 
   RAF_() {
@@ -136,20 +126,13 @@ class StarWarsGame {
 
     this.entityManager_.Update(timeElapsedS, 0);
     this.entityManager_.Update(timeElapsedS, 1);
-    
-    this.ammojs_.StepSimulation(timeElapsedS);
   }
 }
 
-declare let Ammo: any;
 window.addEventListener('DOMContentLoaded', () => {
   const _Setup = () => {
-    Ammo().then(function (AmmoLib) {
-      Ammo = AmmoLib;
-      console.log('Ammo.js loaded');
       new StarWarsGame();
       document.body.removeEventListener('click', _Setup);
-    });
   };
   document.body.addEventListener('click', _Setup);
 });

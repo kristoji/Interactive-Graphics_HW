@@ -7,7 +7,6 @@ import { ParticleSystem } from '../effects/particle-system.ts';
 import { BlasterSystem } from '../effects/blaster.ts';
 import { LoadController } from '../engine/load-controller.ts';
 import { ShootFlashFXEmitter } from '../effects/flash-effect.ts';
-import { AmmoJSController } from '../physics/ammojs-component.ts';
 import { TinyExplosionSpawner } from '../engine/spawners.ts';
 import { SpatialGridController } from '../engine/spatial-grid-controller.ts';
 
@@ -122,13 +121,6 @@ export class XWingController extends Component {
     fx.AddParticle(b);
     this.shots_.push(b);
     this.SetupFlashFX_(this.offsetIndex_);
-
-    // const loader = this.FindEntity('loader')!.GetComponent('LoadController') as LoadController;
-    // loader.LoadSound('./resources/sounds/', 'laser.ogg', (s) => {
-    //   const group = this.GetComponent('RenderComponent').group_;
-    //   group.add(s);
-    //   s.play();  
-    // });
   }
 
   SetupFlashFX_(index: number) {
@@ -155,26 +147,51 @@ export class XWingController extends Component {
     this.shots_ = this.shots_.filter(p => {
       return p.Life > 0.0;
     });
+    const _R = new THREE.Ray();
+    const _M = new THREE.Vector3();
+    const _S = new THREE.Sphere();
+    const _C = new THREE.Vector3();
 
-    // const physics = this.FindEntity('physics')!.GetComponent('AmmoJSController') as AmmoJSController;
-    // for (let s of this.shots_) {
-    //   const hits = physics.RayTest(s.Start, s.End);
-    //   for (let h of hits) {
-    //     if (h.name == this.Parent!.Name) {
-    //       continue;
-    //     }
-    //     const e = this.FindEntity(h.name)!;
-    //     e.Broadcast<Hit>({topic: 'player.hit', value: {
-    //                                                     dmg: this.params_.blasterStrength,
-    //                                                     pos: h.position}
-    //                                                   });
-    //     s.Life = 0.0;
-    //     // console.log('HIT ' + e.Name + ' with blaster shot from ' + this.Parent!.Name);
+    for (let p of this.shots_) {
 
-    //     // const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
-    //     // explosion.Spawn(h.position);    
-    //   }
-    // }
+      // Find intersections
+      _R.direction.copy(p.Velocity);
+      _R.direction.normalize();
+      _R.origin.copy(p.Start);
+
+      const blasterLength = p.End.distanceTo(p.Start);
+      _M.addVectors(p.Start, p.End);
+      _M.multiplyScalar(0.5);
+
+      // Find from _M (instead of this.pos) requires grid.grid 
+      const potentialList = this.grid_!.grid_.FindNear([_M.x, _M.z], [blasterLength, blasterLength]);
+
+      if (potentialList.length == 0) {
+        continue;
+      }
+
+      for (let candidate of potentialList) {
+        let e = candidate.entity as Entity;
+        _S.center.copy(e.Position);
+        _S.radius = e.Attributes!.roughRadius!;
+
+        if (!_R.intersectSphere(_S, _C)) {
+          continue;
+        }
+
+        if (_C.distanceTo(p.Start) > blasterLength) {
+          continue;
+        }
+
+        p.Alive = false;
+        p.Life = 0.0; 
+        e.Broadcast<Hit>({topic: 'player.hit', value: {
+                                                        dmg: this.params_.blasterStrength,
+                                                        pos: _C}
+                                                      });
+        break;
+      }
+    }
   }
 
   CheckCollisions_() {

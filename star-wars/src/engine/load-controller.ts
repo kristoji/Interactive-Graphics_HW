@@ -40,34 +40,6 @@ export class LoadController extends Component {
     return this.textures_[name].texture;
   }
 
-  // LoadSound(path, name, onLoad) {
-  //   if (!(name in this.sounds_)) {
-  //     const loader = new THREE.AudioLoader();
-  //     loader.setPath(path);
-
-  //     loader.load(name, (buf) => {
-  //       this.sounds_[name] = {
-  //         buffer: buf
-  //       };
-  //       const threejs = this.FindEntity('threejs').GetComponent('ThreeJSController');
-  //       const s = new THREE.PositionalAudio(threejs.listener_);
-  //       s.setBuffer(buf);
-  //       s.setRefDistance(10);
-  //       s.setMaxDistance(500);
-  //       onLoad(s);
-  //       this.playing_.push(s);
-  //     });
-  //   } else {
-  //     const threejs = this.FindEntity('threejs').GetComponent('ThreeJSController');
-  //     const s = new THREE.PositionalAudio(threejs.listener_);
-  //     s.setBuffer(this.sounds_[name].buffer);
-  //     s.setRefDistance(25);
-  //     s.setMaxDistance(1000);
-  //     onLoad(s);
-  //     this.playing_.push(s);
-  //   }
-  // }
-
 
   Load(path: string, name: string, onLoad: (asset: THREE.Object3D) => void) {
     if (name.endsWith('glb') || name.endsWith('gltf')) {
@@ -137,11 +109,5 @@ export class LoadController extends Component {
   }
 
   Update(timeElapsed: number) {
-    // for (let i = 0; i < this.playing_.length; ++i) {
-    //   if (!this.playing_[i].isPlaying) {
-    //     this.playing_[i].parent.remove(this.playing_[i]);
-    //   }
-    // }
-    // this.playing_ = this.playing_.filter(s => s.isPlaying);
   }
 }

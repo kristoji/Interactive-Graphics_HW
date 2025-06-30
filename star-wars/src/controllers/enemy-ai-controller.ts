@@ -42,17 +42,6 @@ export class EnemyAIController extends Component {
   }
 
   ApplySteering_(timeElapsed: number) {
-    // const separationVelocity = this._ApplySeparation(local);
-
-    // // Only apply alignment and cohesion to allies
-    // const allies = local.filter((e) => {
-    //   return (e.Enemy && this._seekGoal.equals(e._seekGoal));
-    // });
-
-    // const alignmentVelocity = this._ApplyAlignment(allies);
-
-    // const originVelocity = this.ApplySeek_(
-    //     this.FindEntity('star-destroyer'));
     const originAcc = this.ApplySeek_(this.target_);
 
     const wanderAcc = this.ApplyWander_();
@@ -60,9 +49,6 @@ export class EnemyAIController extends Component {
     const attackAcc = this.ApplyAttack_();
 
     const steeringAcc = new THREE.Vector3(0, 0, 0);
-    // steeringAcc.add(separationAcc);
-    // steeringAcc.add(alignmentAcc);
-    // steeringAcc.add(cohesionAcc);
     steeringAcc.add(originAcc);
     steeringAcc.add(wanderAcc);
     steeringAcc.add(collisionAcc);
@@ -70,7 +56,7 @@ export class EnemyAIController extends Component {
 
     steeringAcc.multiplyScalar(this.acceleration_);
 
-    // // Clamp the force applied
+    // Clamp the force applied
     if (steeringAcc.length() > this.maxSteeringAcc_) {
       steeringAcc.normalize();
       steeringAcc.multiplyScalar(this.maxSteeringAcc_);
@@ -79,7 +65,7 @@ export class EnemyAIController extends Component {
     steeringAcc.multiplyScalar(timeElapsed);
     this.velocity_.add(steeringAcc);
 
-    // // Clamp velocity
+    // Clamp velocity
     this.velocity_.normalize();
     const unit_vel = this.velocity_.clone();
     this.velocity_.multiplyScalar(this.maxSpeed_);
@@ -97,11 +83,6 @@ export class EnemyAIController extends Component {
     quat.setFromRotationMatrix(mat);
     this.Parent!.SetQuaternion(quat);
       
-    // const t = 1.0 - Math.pow(0.05, timeElapsed);
-    // this.quaternion_.setFromUnitVectors(
-    //   new THREE.Vector3(0, 1, 0), forward);
-    // this.Parent.Quaternion.slerp(this.quaternion_, t);
-    // this.Parent.SetQuaternion(this.Parent.Quaternion);
   }
 
   Update(timeElapsed: number) {
@@ -114,11 +95,6 @@ export class EnemyAIController extends Component {
   }
 
   MaybeFire_() {
-    // DEMO
-    // if (Math.random() < 0.01) {
-    //   this.Broadcast({topic: 'player.fire'});
-    //   return;
-    // }
     if (!this.target_) {
       return;
     }
@@ -137,22 +113,12 @@ export class EnemyAIController extends Component {
 
   ApplyCollisionAvoidance_() {
     const pos = this.Parent!.Position;
-    // const colliders = this.grid_.FindNear([pos.x, pos.z], [500, 500]).filter(
-    //     c => c.entity.ID != this.Parent!.ID
-    // );
 
     const colliders = this.grid_.FindNearbyEntities(500);
-    // Hardcoded is best
-    // const starDestroyer = this.FindEntity('star-destroyer');
-    // if (starDestroyer.Attributes.roughRadius) {
-    //   colliders.push({entity: starDestroyer});
-    // }
 
     const force = new THREE.Vector3(0, 0, 0);
 
-    // console.log("Collision avoidance for", this.Parent!.Name);
     for (const c of colliders) {
-      // console.log("Found", c.entity.Name);
       if (this.target_ && c.entity.ID == this.target_.ID) 
         continue; // Don't avoid the target
       
@@ -164,8 +130,6 @@ export class EnemyAIController extends Component {
         continue;
       }
 
-      // const directionFromEntity = _TMP_V3_0.subVectors(
-      //     pos, entityPos);
       const directionFromEntity = pos.clone().sub(entityPos);
       const multiplier = (entityRadius + this.Parent!.Attributes!.roughRadius!) / Math.max(1, (dist - 200));
       directionFromEntity.normalize();
@@ -205,18 +169,6 @@ export class EnemyAIController extends Component {
   }
 
   AcquireTarget_() {
-    // const pos = this.Parent!.Position;
-    // const enemies = this.grid_.FindNear(
-    //     [pos.x, pos.z], [1000, 1000]).filter(
-    //     c => c.entity.Attributes.team == 'allies'
-    // );
-    
-    // if (enemies.length == 0) {
-    //   return;
-    // }
-
-    // this.target_ = enemies[0].entity;
-
     this.target_ = this.FindEntity('player');
   }
 

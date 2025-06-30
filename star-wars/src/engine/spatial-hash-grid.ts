@@ -9,7 +9,6 @@ export class SpatialHashGrid {
   _bounds: couple<couple<number>>;
   _queryIds: number;
   ids_: number;
-  all_entities: Array<Entity> = [];
 
 
   constructor(bounds: couple<couple<number>>, dimensions: couple<number>) {
@@ -46,15 +45,11 @@ export class SpatialHashGrid {
       id_: this.ids_++,
       entity: parent,
     };
-    this.all_entities.push(parent);
     this._Insert(client);
 
     return client;
   }
 
-  GetEntities(): Array<Entity> {
-    return this.all_entities;
-  }
 
   UpdateClient(client: Client) {
     const [x, y] = client.position;

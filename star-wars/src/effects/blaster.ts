@@ -79,28 +79,12 @@ export class BlasterSystem extends Component {
     this.params_.scene.add(this.particleSystem_);
   }
 
-  // CreateParticle() {
-  //   const p = {
-  //     Start: new THREE.Vector3(0, 0, 0),
-  //     End: new THREE.Vector3(0, 0, 0),
-  //     Colour: new THREE.Color(),
-  //     Size: 1,
-  //     Alive: true,
-  //   };
-    
-  //   return p;
-  // }
-
   AddParticle(p: Bullet) {
     this.liveParticles_.push(p);
   }
 
   Update(timeInSeconds: number) {
-    const _R = new THREE.Ray();
-    const _M = new THREE.Vector3();
-    const _S = new THREE.Sphere();
-    const _C = new THREE.Vector3();
-    // console.log("BlasterSystem Update", this.liveParticles_.length);
+
     for (const p of this.liveParticles_) {
       p.Life -= timeInSeconds;
       if (p.Life <= 0) {
@@ -115,53 +99,7 @@ export class BlasterSystem extends Component {
         const dir = p.Velocity.clone().normalize();
         p.Start = p.End.clone().sub(dir.multiplyScalar(p.Length));
       }
-
-      // instead of raycasting here, we exploit the lib in xwing controller
-      // Find intersections
-      _R.direction.copy(p.Velocity);
-      _R.direction.normalize();
-      _R.origin.copy(p.Start);
-
-      const blasterLength = p.End.distanceTo(p.Start);
-      _M.addVectors(p.Start, p.End);
-      _M.multiplyScalar(0.5);
-
-      // const potentialList = this._params.visibility.GetLocalEntities(_M, blasterLength * 0.5);
-      const potentialList = this.params_.grid.FindNear([_M.x, _M.z], [blasterLength, blasterLength]);
-
-      // const potentialList = this.params_.grid.GetEntities();
-
-      // Technically we should sort by distance, but I'll just use the first hit. Good enough.
-      if (potentialList.length == 0) {
-        continue;
-      }
-      // console.log(potentialList.length);
-
-      for (let candidate of potentialList) {
-        let e = candidate.entity as Entity;
-        // console.log("Checking", e.Name);
-        // let e = candidate as Entity;
-        _S.center.copy(e.Position);
-        _S.radius = e.Attributes!.roughRadius!;
-
-        if (!_R.intersectSphere(_S, _C)) {
-          continue;
-        }
-
-        if (_C.distanceTo(p.Start) > blasterLength) {
-          continue;
-        }
-        console.log("HIT" + e.Name);
-
-        p.Alive = false;
-        e.Broadcast<Hit>({topic: 'player.hit', value: {
-                                                        dmg: this.blasterStrength,
-                                                        pos: _C}
-                                                      });
-        break;
-      }
     }
-    // console.log("BlasterSystem Update after", this.liveParticles_.length);
 
     this.liveParticles_ = this.liveParticles_.filter(p => {
       return p.Alive;

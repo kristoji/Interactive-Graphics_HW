@@ -2,7 +2,7 @@ import {THREE} from '../utils/three-defs.ts';
 import {Component} from '../engine/entity.ts';
 
 import type {t_Attributes, Message, Hit} from '../utils/types.ts';
-import { ExplosionSpawner, TinyExplosionSpawner } from '../engine/spawners.ts';
+import { ExplosionSpawner, ShipSmokeSpawner, TinyExplosionSpawner } from '../engine/spawners.ts';
 
 export class HealthController extends Component {
   params_: {
@@ -54,8 +54,8 @@ export class HealthController extends Component {
       return;
     }
 
-    // const spawner = this.FindEntity('spawners')!.GetComponent('ShipSmokeSpawner') as ShipSmokeSpawner;
-    // spawner.Spawn(this.Parent!);
+    const spawner = this.FindEntity('spawners')!.GetComponent('ShipSmokeSpawner') as ShipSmokeSpawner;
+    spawner.Spawn(this.Parent!);
 
     this.TakeDamage_(msg.value!);
   }
@@ -84,8 +84,6 @@ export class HealthController extends Component {
     const explosion = this.FindEntity('spawners')!.GetComponent('TinyExplosionSpawner') as TinyExplosionSpawner;
     explosion.Spawn(pos);    
 
-    // this.Broadcast({topic: 'health.damage'});
-
     if (this.Parent!.Attributes!.health! <= 0) {
       this.Die_();
     }
@@ -102,9 +100,5 @@ export class HealthController extends Component {
   }
 
   Update(_) {
-    // DEMO
-    // if (Math.random() < 0.0005) {
-    //   this.OnHit_({value: 0});
-    // }
   }
 };

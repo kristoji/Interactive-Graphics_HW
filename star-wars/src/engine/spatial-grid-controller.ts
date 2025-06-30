@@ -28,7 +28,6 @@ export class SpatialGridController extends Component {
     ];
 
     this.client_ = this.grid_.NewClient(pos, [1, 1], this.parent_!);
-    // this.client_.entity = this.parent_!;
   }
 
   OnPhysicsLoaded_() {
