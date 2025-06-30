@@ -1,4 +1,4 @@
-import {THREE} from '../utils/three-defs.ts';
+import {base, THREE} from '../utils/three-defs.ts';
 import {Bullet, Hit} from '../utils/types.ts';
 
 import {Component, Entity} from '../engine/entity.ts';
@@ -72,7 +72,7 @@ export class XWingController extends Component {
     this.blasterFX_ = new ParticleSystem({
         camera: this.params_.camera,
         parent: group,
-        texture: '/resources/textures/fx/blaster.jpg',
+        texture: `${base}resources/textures/fx/blaster.jpg`,
     });
 
     this.spotlight_ = new THREE.SpotLight(

@@ -1,4 +1,4 @@
-import {THREE} from '../utils/three-defs.js';
+import {base, THREE} from '../utils/three-defs.js';
 
 import {Entity, Component} from './entity.ts';
 import { PlayerController } from '../player/player-controller.ts';
@@ -47,7 +47,7 @@ export class PlayerSpawner extends Component {
     player.SetQuaternion(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI))
     player.AddComponent(new RenderComponent({
       scene: params.scene,
-      resourcePath: '/resources/models/x-wing/',
+      resourcePath: `${base}resources/models/x-wing/`,
       resourceName: 'scene.gltf',
       scale: 2,
       offset: {
@@ -106,7 +106,7 @@ export class TieFighterSpawner extends Component {
     e.AddComponent(new SpatialGridController(this.params_.grid));
     e.AddComponent(new RenderComponent({
       scene: params.scene,
-      resourcePath: '/resources/models/tie-fighter-gltf/',
+      resourcePath: `${base}resources/models/tie-fighter-gltf/`,
       resourceName: 'scene.gltf',
       scale: 0.15,
       colour: new THREE.Color(0xFFFFFF),
@@ -152,7 +152,7 @@ export class XWingSpawner extends Component {
     e.AddComponent(new SpatialGridController(this.params_.grid));
     e.AddComponent(new RenderComponent({
       scene: params.scene,
-      resourcePath: '/resources/models/x-wing/',
+      resourcePath: `${base}resources/models/x-wing/`,
       resourceName: 'scene.gltf',
       scale: 2,
       offset: {

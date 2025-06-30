@@ -1,5 +1,5 @@
 import { Component, Entity } from '../engine/entity.js';
-import {THREE} from '../utils/three-defs.js';
+import {base, THREE} from '../utils/three-defs.js';
 import {ParticleEmitter, ParticleSystem} from './particle-system.js';
 
 class SmokeFXEmitter extends ParticleEmitter {
@@ -72,7 +72,7 @@ export class ShipEffects extends Component {
         this.particles_ = new ParticleSystem({
             camera: this.params_.camera,
             parent: this.params_.scene,
-            texture: '/resources/textures/fx/smoke.png',
+            texture: `${base}resources/textures/fx/smoke.png`,
         });
         this.OnDamaged_();
     }

@@ -1,4 +1,4 @@
-import {THREE} from '../utils/three-defs.ts';
+import {base, THREE} from '../utils/three-defs.ts';
 
 import {ParticleEmitter, ParticleSystem} from "./particle-system.js";
 import type { Message, Particle } from '../utils/types.ts';
@@ -79,7 +79,7 @@ export class XWingEffects extends Component {
     this.blasterFX_ = new ParticleSystem({
         camera: this.params_.camera,
         parent: group,
-        texture: '/resources/textures/fx/fire.png',
+        texture: `${base}resources/textures/fx/fire.png`,
     });
 
     const x = 0.8 * 4;

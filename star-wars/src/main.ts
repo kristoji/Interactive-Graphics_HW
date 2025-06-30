@@ -5,7 +5,7 @@ import {LoadController} from './engine/load-controller.ts';
 
 import {ThreeJSController} from './engine/threejs-component.ts';
 
-import {THREE} from './utils/three-defs.js';
+import {base, THREE} from './utils/three-defs.js';
 import { ExplosionSpawner, PlayerSpawner, ShipSmokeSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
 
 import * as MATH from './utils/math.js';
@@ -51,7 +51,7 @@ class StarWarsGame {
     fx.AddComponent(new BlasterSystem({
         scene: this.scene_,
         camera: this.camera_,
-        texture: '/resources/textures/fx/blaster.jpg',
+        texture: `${base}resources/textures/fx/blaster.jpg`,
         grid: this.grid_,
     }));
     this.entityManager_.Add(fx, 'fx');
