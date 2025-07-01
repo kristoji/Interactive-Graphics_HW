@@ -6,6 +6,7 @@ import {LoadController} from './engine/load-controller.ts';
 import {ThreeJSController} from './engine/threejs-component.ts';
 
 import {THREE} from './utils/three-defs.js';
+import {base} from './utils/three-defs.js';
 import { ExplosionSpawner, PlayerSpawner, ShipSmokeSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
 
 import * as MATH from './utils/math.js';
@@ -141,8 +142,8 @@ window.addEventListener('DOMContentLoaded', () => {
       document.body.removeEventListener('click', _Setup);
   };
   const resourcePathArray = [
-    './resources/models/x-wing/',
-    './resources/models/tie-fighter-gltf/',
+    `${base}resources/models/x-wing/`,
+    `${base}resources/models/tie-fighter-gltf/`,
   ];
   const resourceNameArray = [
     'scene.gltf',
