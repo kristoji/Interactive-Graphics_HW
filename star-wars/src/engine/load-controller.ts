@@ -1,4 +1,5 @@
-import { GLTF } from 'three/examples/jsm/Addons.js';
+// import { GLTF } from 'three/examples/jsm/Addons.js';
+import type {GLTF} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {THREE, FBXLoader, GLTFLoader, SkeletonUtils} from '../utils/three-defs.ts';
 
 import {Component, Entity} from "./entity.ts";

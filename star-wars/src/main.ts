@@ -5,7 +5,7 @@ import {LoadController} from './engine/load-controller.ts';
 
 import {ThreeJSController} from './engine/threejs-component.ts';
 
-import {base, THREE} from './utils/three-defs.js';
+import {THREE} from './utils/three-defs.js';
 import { ExplosionSpawner, PlayerSpawner, ShipSmokeSpawner, TieFighterSpawner, TinyExplosionSpawner, XWingSpawner } from './engine/spawners.ts';
 
 import * as MATH from './utils/math.js';
@@ -21,16 +21,17 @@ class StarWarsGame {
   scene_: THREE.Scene;
   grid_: SpatialHashGrid;
 
-  constructor() {
-    this._Initialize();
+  constructor(loader: Entity) {
+    this._Initialize(loader);
   }
 
-  _Initialize() {
+  _Initialize(loader: Entity) {
     this.entityManager_ = new EntityManager();
 
     this.grid_ = new SpatialHashGrid(
         [[-5000, -5000], [5000, 5000]], [100, 100]);
-
+        
+    this.entityManager_.Add(loader, 'loader');
     this.LoadControllers_();
 
     this.previousRAF_ = null;
@@ -51,14 +52,14 @@ class StarWarsGame {
     fx.AddComponent(new BlasterSystem({
         scene: this.scene_,
         camera: this.camera_,
-        texture: `${base}resources/textures/fx/blaster.jpg`,
+        texture: './resources/textures/fx/blaster.jpg',
         grid: this.grid_,
     }));
     this.entityManager_.Add(fx, 'fx');
 
-    const l = new Entity();
-    l.AddComponent(new LoadController());
-    this.entityManager_.Add(l, 'loader');
+    // const l = new Entity();
+    // l.AddComponent(new LoadController());
+    // this.entityManager_.Add(l, 'loader');
 
     const basicParams = {
       grid: this.grid_,
@@ -130,9 +131,35 @@ class StarWarsGame {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  
+  const l = new Entity();
+  const lc = new LoadController();
+  l.AddComponent(lc);
+
   const _Setup = () => {
-      new StarWarsGame();
+      new StarWarsGame(l);
       document.body.removeEventListener('click', _Setup);
   };
-  document.body.addEventListener('click', _Setup);
+  const resourcePathArray = [
+    './resources/models/x-wing/',
+    './resources/models/tie-fighter-gltf/',
+  ];
+  const resourceNameArray = [
+    'scene.gltf',
+    'scene.gltf',
+  ];
+  const chatTextArea = document.getElementById('chat-ui-text-area');
+  if (!chatTextArea) {
+    console.error('Chat text area not found');
+    return;
+  }
+
+  lc.Load(resourcePathArray[0], resourceNameArray[0], (_) => {
+    chatTextArea.innerHTML = '<div class="chat-text">Loaded X-Wing</div>';
+    lc.Load(resourcePathArray[1], resourceNameArray[1], (_) => {      
+      chatTextArea.innerHTML = '<div class="chat-text fadeOut">Click to Start</div>';
+      document.body.addEventListener('click', _Setup);
+    });
+  });
+
 });

@@ -1,2 +1,2 @@
 npm install three
-npm install ammo.js
+npx vite build
